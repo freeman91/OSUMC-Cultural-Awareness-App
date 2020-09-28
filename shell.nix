@@ -9,5 +9,8 @@ mkShell {
     nodePackages.yarn
     nodePackages.prettier
     nodePackages.typescript-language-server
+
+    # Markdown
+    pandoc
   ];
 }
