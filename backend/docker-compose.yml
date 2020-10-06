@@ -1,0 +1,9 @@
+version: "3"
+services:
+  cultural-awareness:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: cultural_awareness/__init__.py
+      FLASK_ENV: development
