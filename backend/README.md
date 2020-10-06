@@ -7,10 +7,12 @@ export FLASK_APP='cultural_awareness/__init__.py'
 pipenv run flask run
 ```
 
-## Database setup
+create .env file and add the following variables
 
-- install mongodb-community (installation instructions depend on os)
-- start mongo instance (depends on os)
-- run db_restore script to get up-to-date data (script in progress)
-- you can connect to db from your shell `mongo --shell`
-- example shell commands, and python functions using pymongo in [mongo-notes](../mongo-notes.md)
+```sh
+FLASK_APP='backend/cultural_awareness/__init__.py'
+MONGO_URI='mongodb://localhost:27017/'
+MONGO_USER=
+MONGO_PASSWORD=
+DATABASE=<database_name>
+```
