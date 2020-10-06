@@ -49,6 +49,10 @@ def create_app() -> Flask:
             response["routes"].append(route)
         return response
 
+    @app.route("/v1/health")
+    def health():
+        return {"message": "healthy"}
+
     @app.route("/v1/culture_groups")
     def culture_groups() -> Dict[str, List[str]]:
         """
