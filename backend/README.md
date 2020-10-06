@@ -32,3 +32,11 @@ docker logs $(docker ps --filter name=backend_cultural-awareness --format "{{.ID
 # Stop
 docker-compose down
 ```
+
+### Tests
+
+```sh
+pipenv shell
+
+python -m pytest
+```

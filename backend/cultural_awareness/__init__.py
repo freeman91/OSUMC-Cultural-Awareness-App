@@ -9,6 +9,7 @@ from flask import request, Flask
 from . import db_connection
 db = db_connection.connect()
 
+from flask import request, Flask
 
 def create_app() -> Flask:
     """
@@ -50,288 +51,286 @@ def create_app() -> Flask:
             response["routes"].append(route)
         return response
 
-        @app.route("/v1/culture_groups")
-        def culture_groups() -> Dict[str, List[str]]:
-            """
-            Fetch a list of all culture groups
+    @app.route("/v1/health")
+    def health():
+        return {"message": "healthy"}
 
-            Returns:
+    @app.route("/v1/culture_groups")
+    def culture_groups() -> Dict[str, List[str]]:
+        """
+        Fetch a list of all culture groups
 
-              200 - list of the all the names of culture groups
-              {
-                "cultures": [culture1, culture2, ...]
-              }
+        Returns:
 
-              500 - otherwise
-            """
-            return {"cultures": []}
+          200 - list of the all the names of culture groups
+          {
+            "cultures": [culture1, culture2, ...]
+          }
 
-        @app.route("/v1/<group_name>")
-        def culture_snapshot(group_name: str) -> Any:
-            """
-            Fetch a snapshot of information about a specific Culture Group
+          500 - otherwise
+        """
+        return {"cultures": []}
 
-            Parameters:
+    @app.route("/v1/<group_name>")
+    def culture_snapshot(group_name: str) -> Any:
+        """
+        Fetch a snapshot of information about a specific Culture Group
 
-              group_name: name of Culture Group
+        Parameters:
 
-            Returns:
-              200 - all general insights for a group
-              500 - otherwise
-            """
-            pass
+          group_name: name of Culture Group
 
-        @app.route("/v1/<group_name>/all")
-        def culture_detailed(group_name: str) -> Any:
-            """
-            Fetch all information about a specific Culture Group
+        Returns:
+          200 - all general insights for a group
+          500 - otherwise
+        """
+        pass
 
-            Parameters:
+    @app.route("/v1/<group_name>/all")
+    def culture_detailed(group_name: str) -> Any:
+        """
+        Fetch all information about a specific Culture Group
 
-              group_name: name of Culture Group
+        Parameters:
 
-            Returns:
-              200 - all insights for a group
-              500 - otherwise
-            """
-            pass
+          group_name: name of Culture Group
 
-        @app.route("/v1/<group_name>/all/download")
-        def download_culture(group_name: str) -> Any:
-            """
-            Fetch all information about a specific Culture Group in downloadable
-            and storeable form
+        Returns:
+          200 - all insights for a group
+          500 - otherwise
+        """
+        pass
 
-            Parameters:
+    @app.route("/v1/<group_name>/all/download")
+    def download_culture(group_name: str) -> Any:
+        """
+        Fetch all information about a specific Culture Group in downloadable
+        and storeable form
 
-              group_name: name of Culture Group
+        Parameters:
 
-            Returns:
+          group_name: name of Culture Group
 
-              200 - file sent to browser for download
-              500 - otherwise
-            """
-            pass
+        Returns:
 
-        @app.route("/v1/login", methods=["POST"])
-        def login() -> Dict[str, str]:
-            """
-            Login a User
+          200 - file sent to browser for download
+          500 - otherwise
+        """
+        pass
 
-            Parameters:
+    @app.route("/v1/login", methods=["POST"])
+    def login() -> Dict[str, str]:
+        """
+        Login a User
 
-              POST body:
+        Parameters:
 
-              {
-                "email": "email",
-                "password": "password"
-              }
+          POST body:
 
-            Returns:
-              200 - Oauth token
+          {
+            "email": "email",
+            "password": "password"
+          }
 
-              {"oauth": "token"}
+          Returns:
+            200 - Oauth token
 
-              400 - malformed request body
-              401 - wrong password
-              500 - otherwise
-            """
-            body = request.get_json()
-            return {"oauth": body["password"]}
+            {"oauth": "token"}
 
-        @app.route("/v1/culture_groups", methods=["POST"])
-        def create_culture() -> Dict[str, str]:
-            """
-            Create a Culture with information
+            400 - malformed request body
+            401 - wrong password
+            500 - otherwise
+        """
+        body = request.get_json()
+        return {"oauth": body["password"]}
 
-            Parameters:
+    @app.route("/v1/culture_groups", methods=["POST"])
+    def create_culture() -> Dict[str, str]:
+        """
+        Create a Culture with information
 
-              POST Body:
+        Parameters:
 
-              {
-                "name": "culture-name",
-                "general_insights": [],
-                "specialized_insights": [],
-                "oauth": "token"
-              }
+          POST Body:
 
-            Returns:
-              200 - group successfully added
+          {
+            "name": "culture-name",
+            "general_insights": [],
+            "specialized_insights": [],
+            "oauth": "token"
+           }
 
-              {"message": "successfully created CULTURE_NAME"}
+        Returns:
+          200 - group successfully added
 
-              401 - bad auth token
-              500 - otherwise
-            """
-            body = request.get_json()
-            return {"message": f"succesfully created {body['name']}"}
+          {"message": "successfully created CULTURE_NAME"}
 
-        @app.route("/v1/<culture_group>", methods=["PUT"])
-        def update_culture(culture_group: str) -> Dict[str, str]:
-            """
-            Update an existing Culture
+          401 - bad auth token
+          500 - otherwise
+        """
+        body = request.get_json()
+        return {"message": f"succesfully created {body['name']}"}
 
-            Parameters:
+    @app.route("/v1/<culture_group>", methods=["PUT"])
+    def update_culture(culture_group: str) -> Dict[str, str]:
+        """
+        Update an existing Culture
 
-              POST Body:
+        Parameters:
 
-              {
-                "name": "culture-name",
-                "general_insights": [],
-                "specialized_insights": [],
-                "oauth": "token"
-              }
+          POST Body:
 
-            Returns:
-              200 - group successfully updated
+          {
+            "name": "culture-name",
+            "general_insights": [],
+            "specialized_insights": [],
+            "oauth": "token"
+           }
 
-              {"message": "successfully updated CULTURE_GROUP"}
+        Returns:
+          200 - group successfully updated
 
-              401 - bad auth token
-              500 - otherwise
-            """
-            body = request.get_json()
-            return {"message": f"succesfully updated {culture_group}"}
+          {"message": "successfully updated CULTURE_GROUP"}
 
-        @app.route("/v1/<culture_group>", methods=["DELETE"])
-        def delete_culture(culture_group: str) -> Dict[str, str]:
-            """
-            Delete an existing Culture
+          401 - bad auth token
+          500 - otherwise
+        """
+        body = request.get_json()
+        return {"message": f"succesfully updated {culture_group}"}
 
-            Returns:
+    @app.route("/v1/<culture_group>", methods=["DELETE"])
+    def delete_culture(culture_group: str) -> Dict[str, str]:
+        """
+        Delete an existing Culture
 
-              200 - culture deleted
+        Returns:
 
-              {"message": "deleted CULTURE_GROUP"}
+          200 - culture deleted
 
-              401 - not authorized
-              500 - otherwise
-            """
-            return {"message": f"deleted {culture_group}"}
+          {"message": "deleted CULTURE_GROUP"}
 
-        @app.route("/v1/register", methods=["POST"])
-        def register() -> Dict[str, str]:
-            """
-            Register a new administrator
+          401 - not authorized
+          500 - otherwise
+        """
+        return {"message": f"deleted {culture_group}"}
 
-            Parameters:
+    @app.route("/v1/register", methods=["POST"])
+    def register() -> Dict[str, str]:
+        """
+        Register a new administrator
 
-              POST Body:
+        Parameters:
 
-              {
-                "name": "name",
-                "email": "email",
-                "password": "password",
-                "password_confirmation": "password",
-                "oauth": "token"
-              }
+          POST Body:
 
-            Returns:
+          {
+            "name": "name",
+            "email": "email",
+            "password": "password",
+            "password_confirmation": "password",
+            "oauth": "token"
+           }
 
-              200 - New admin created
+        Returns:
+          200 - New admin created
 
-              {"message": "successfully created user NAME <EMAIL>"}
+          {"message": "successfully created user NAME <EMAIL>"}
 
-              400 - Malformed body
-              401 - unauthorized
-              500 - otherwise
-            """
-            body = request.get_json()
-            return {
-                "message":
-                f"successfully created user {body['name']} <{body['email']}>"
-            }
+          400 - Malformed body
+          401 - unauthorized
+          500 - otherwise
+        """
+        body = request.get_json()
+        return {
+            "message": f"successfully created user {body['name']} <{body['email']}>"
+        }
 
-        @app.route("/v1/admins")
-        def admins() -> List[Any]:
-            """
-            List all admins
+    @app.route("/v1/admins")
+    def admins() -> List[Any]:
+        """
+        List all admins
 
-            Returns:
+        Returns:
 
-              200 - list of admins returned
+          200 - list of admins returned
 
-              {"admins": ["admin1", "admin2", ...]}
+          {"admins": ["admin1", "admin2", ...]}
 
-              401 - bad auth token
-              500 - otherwise
-            """
-            return {"admins": []}
+          401 - bad auth token
+          500 - otherwise
+        """
+        return {"admins": []}
 
-        @app.route("/v1/admin/invite", methods=["POST"])
-        def invite_admin() -> Dict[str, str]:
-            """
-            Invite admin via Email
+    @app.route("/v1/admin/invite", methods=["POST"])
+    def invite_admin() -> Dict[str, str]:
+        """
+        Invite admin via Email
 
-            Parameters:
+        Parameters:
 
-              POST Body:
+          POST Body:
 
-              {
-                "email": "email",
-                "oauth": "token"
-              }
+          {
+            "email": "email",
+            "oauth": "token"
+          }
 
-            Returns:
+          Returns:
+            200 - admin successfully added
 
-              200 - admin successfully added
+            {"message": "email sent to EMAIL"}
 
-              {"message": "email sent to EMAIL"}
+            401 - bad auth token
+            500 - otherwise
+        """
+        body = request.get_json()
+        return {"message": f"email sent to {body['email']}"}
 
-              401 - bad auth token
-              500 - otherwise
-            """
-            body = request.get_json()
-            return {"message": f"email sent to {body['email']}"}
+    @app.route("/v1/admin/<email>", methods=["PUT"])
+    def update_admin(email: str) -> Dict[str, str]:
+        """
+        Update Admin
 
-        @app.route("/v1/admin/<email>", methods=["PUT"])
-        def update_admin(email: str) -> Dict[str, str]:
-            """
-            Update Admin
+        Parameters:
 
-            Parameters:
+          email: email of Admin
 
-              email: email of Admin
+          POST Body:
 
-              POST Body:
+          {
+            "name": "name",
+            "email": "email",
+            "password": "password",
+            "password_confirmation": "password",
+            "oauth": "token"
+          }
 
-              {
-                "name": "name",
-                "email": "email",
-                "password": "password",
-                "password_confirmation": "password",
-                "oauth": "token"
-              }
+        Returns:
+          200 - admin successfully updated
 
-            Returns:
+          {"message": "successfully updated admin <EMAIL>"}
 
-              200 - admin successfully updated
+          401 - bad auth token
+          500 - otherwise
+        """
+        return {"message": f"successfully updated admin <{email}>"}
 
-              {"message": "successfully updated admin <EMAIL>"}
+    @app.route("/v1/admin/<email>", methods=["DELETE"])
+    def delete_admin(email: str) -> Dict[str, str]:
+        """
+        Delete Admin
 
-              401 - bad auth token
-              500 - otherwise
-            """
-            return {"message": f"successfully updated admin <{email}>"}
+        Parameters:
+          email: email of Admin
 
-        @app.route("/v1/admin/<email>", methods=["DELETE"])
-        def delete_admin(email: str) -> Dict[str, str]:
-            """
-            Delete Admin
+        Returns:
+          200 - admin successfully deleted
 
-            Parameters:
+          {"message": "successfully deleted admin <EMAIL>"}
 
-              email: email of Admin
-
-            Returns:
-
-              200 - admin successfully deleted
-
-              {"message": "successfully deleted admin <EMAIL>"}
-
-              401 - bad auth token
-              500 - otherwise
-            """
-            return {"message": "successfully deleted admin <{email}>"}
+          401 - bad auth token
+          500 - otherwise
+        """
+        return {"message": "successfully deleted admin <{email}>"}
 
     return app
