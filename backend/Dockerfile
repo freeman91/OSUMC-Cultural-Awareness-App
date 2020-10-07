@@ -4,10 +4,10 @@ MAINTAINER Scott Nicholas Hackman <snickhackman@gmail.com>
 
 RUN pip install pipenv
 
-WORKDIR /app
+RUN mkdir /appdata
+WORKDIR /appdata
 ARG FLASK_APP=$FLASK_APP
-
-COPY . /app
+COPY . .
 
 RUN pipenv install
 
