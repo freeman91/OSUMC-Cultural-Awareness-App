@@ -1,9 +1,12 @@
-## mongodb installation
+## ssh into mongo container
 
 ```sh
-# install dependencies (mac)
-brew tap mongodb/brew
-brew install mongodb-community@4.4
+docker exec -it mongodb bash
+# verify mongodb instance is running
+ps -edaf | grep mongo | grep -v grep
+
+# log into mongo shell with credentials
+mongo --username user --password password --authenticationDatabase admin
 ```
 
 ## mongo shell commands
@@ -11,25 +14,14 @@ brew install mongodb-community@4.4
 [mongo shell docs](https://docs.mongodb.com/manual/reference/mongo-shell/)
 
 ```sh
-# run MongoDB instance as background process
-mongod --config /usr/local/etc/mongod.conf --fork
-
-# check to see if mongo is running on the default port
-lsof -n -i4TCP:27017
-
-# kill mongoDB instance
-mongo
-use admin
-db.shutdownServer()
-
-# connect to local mongo instance from terminal
-mongo --shell
 
 show dbs
 
 use <database>
-
+db.dropDatabase()
+db.createCollection('<collection>')
 show collections
+db.<collection>.insertOne({name: 'bill', email: 'example@gamil.com'})
 
 # show all documents in the collection
 db.<collection>.find()
