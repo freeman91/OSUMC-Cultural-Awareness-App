@@ -15,7 +15,7 @@ TODO: update these variables
 
 ```sh
 FLASK_ENV=development
-FLASK_APP=api/controllers/__init__.py
+FLASK_APP=api/__init__.py
 MONGO_URI=mongodb://localhost:27017/
 MONGO_INITDB_DATABASE=database
 MONGO_INITDB_ROOT_USERNAME=user
@@ -28,12 +28,12 @@ MONGO_PORT=27017
 
 ```js
 db.createUser({
-  user: 'user',
-  pwd: 'password',
+  user: "user",
+  pwd: "password",
   roles: [
     {
-      role: 'readWrite',
-      db: 'database',
+      role: "readWrite",
+      db: "database",
     },
   ],
 });
