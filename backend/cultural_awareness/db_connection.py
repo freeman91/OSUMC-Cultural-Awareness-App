@@ -2,9 +2,8 @@ import os
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 
-#TODO: DOMAIN should be dynamically generated based on mongo container IP address
-DOMAIN = '172.19.199.3'
-PORT = '27017'
+DOMAIN = os.getenv("MONGO_IP")
+PORT = os.getenv("MONGO_PORT")
 MONGO_INITDB_DATABASE = os.getenv("MONGO_INITDB_DATABASE")
 MONGO_INITDB_ROOT_USERNAME = os.getenv("MONGO_INITDB_ROOT_USERNAME")
 MONGO_INITDB_ROOT_PASSWORD = os.getenv("MONGO_INITDB_ROOT_PASSWORD")

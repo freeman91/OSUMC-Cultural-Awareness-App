@@ -23,7 +23,7 @@ services:
       - '27017:27017'
     networks:
       app-net:
-        ipv4_address: 172.19.199.3
+        ipv4_address: ${MONGO_IP}
 
 networks:
   app-net:
