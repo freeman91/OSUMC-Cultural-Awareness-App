@@ -4,15 +4,14 @@ RESTful API that has [Routes](https://docs.google.com/spreadsheets/d/19zLqvcoFI7
 
 ## Installation
 
-- docker cli tools
-- TODO: etc...
+- [Docker](https://docs.docker.com/get-docker/)
+- python 3.8
 
 ## Configuration
 
-### .env file
+- create .env file
 
 TODO: update these variables
-create a .env file with the follwoing content
 
 ```sh
 FLASK_ENV=development
@@ -23,6 +22,21 @@ MONGO_INITDB_ROOT_USERNAME=user
 MONGO_INITDB_ROOT_PASSWORD=password
 MONGO_IP=172.19.199.3
 MONGO_PORT=27017
+```
+
+- create mongo-root-user.js
+
+```js
+db.createUser({
+  user: 'user',
+  pwd: 'password',
+  roles: [
+    {
+      role: 'readeWrite',
+      db: 'database',
+    },
+  ],
+});
 ```
 
 ## Running containers
