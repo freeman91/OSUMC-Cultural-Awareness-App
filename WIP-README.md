@@ -15,7 +15,7 @@ TODO: update these variables
 
 ```sh
 FLASK_ENV=development
-FLASK_APP=cultural_awareness/__init__.py
+FLASK_APP=api/controllers/__init__.py
 MONGO_URI=mongodb://localhost:27017/
 MONGO_INITDB_DATABASE=database
 MONGO_INITDB_ROOT_USERNAME=user
@@ -32,7 +32,7 @@ db.createUser({
   pwd: 'password',
   roles: [
     {
-      role: 'readeWrite',
+      role: 'readWrite',
       db: 'database',
     },
   ],
