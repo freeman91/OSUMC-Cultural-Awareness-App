@@ -16,3 +16,8 @@ instance/
 .coverage
 htmlcov/
 .mypy_cache/
+
+mongo-volume
+mongo-root-user.js
+.envrc
+.env
