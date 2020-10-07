@@ -9,7 +9,6 @@ from flask import request, Flask
 from . import db_connection
 db = db_connection.connect()
 
-from flask import request, Flask
 
 def create_app() -> Flask:
     """
@@ -242,7 +241,8 @@ def create_app() -> Flask:
         """
         body = request.get_json()
         return {
-            "message": f"successfully created user {body['name']} <{body['email']}>"
+            "message":
+            f"successfully created user {body['name']} <{body['email']}>"
         }
 
     @app.route("/v1/admins")
