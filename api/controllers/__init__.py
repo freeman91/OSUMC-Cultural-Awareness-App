@@ -6,7 +6,7 @@ Routes Specified:
 """
 from typing import Any, List, Dict
 from flask import request, Flask
-from . import db_connection
+from ../ import db_connection
 db = db_connection.connect()
 
 
