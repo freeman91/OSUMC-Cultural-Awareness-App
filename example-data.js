@@ -1,4 +1,5 @@
 {
+  general_disclaimer: 'The following cultural patterns may represent many individuals of the selected culture, but do not represent all people in a community';
   cultureGroups: [
     {
       name: `Jehovah's Witness`,
@@ -64,7 +65,78 @@
         // etc
       },
     },
-    // etc
+    {
+      name: 'African Americans',
+      general_insights: [
+        {
+          text:
+            'It’s helpful to make a distinction in terminology – “blacks” can be defined as all persons of African descent, whose genealogical connection is to Africa, and in particular West Africa. However, because skin color and culture are not the same thing, when discussing cultural beliefs and practices among this group, the term African American best refers to “blacks” in the United States, people whose sociocultural roots are in the North American experience, but who are of African descent.',
+          source:
+            'http://www.dimensionsofculture.com/2011/05/health-care-for-african-american-patientsfamilies/',
+        },
+        {
+          text:
+            'Older African Americans may be suspicious of clinicians, because of experiences of past generations of African Americans with health care.',
+          source:
+            'http://www.dimensionsofculture.com/2011/05/health-care-for-african-american-patientsfamilies/',
+        },
+        {
+          text:
+            'Generally speaking, in the African American experience, spirituality is a fundamental part of how many people process and reconcile the experience of death. African Americans tend to believe in the sanctity of life and rely on a strong sense of community and family at times of loss. Family-centered consensus is valued in decision-making and there’s often a strong need for extended family to gather at a time of death; the family should be informed of an impending death so that extended family members who live out of state can be notified.',
+          source:
+            'http://www.dimensionsofculture.com/2011/05/health-care-for-african-american-patientsfamilies/',
+        },
+        {
+          text:
+            'African American families may refuse service because they do not believe they need it, in spite of high levels of stress.',
+          source:
+            'https://www.healthnetworksolutions.net/index.php/understanding-different-cultures#Black',
+        },
+        {
+          text:
+            'African American families are typically very private, not sharing concerns with strangers.',
+          source:
+            'https://www.healthnetworksolutions.net/index.php/understanding-different-cultures#Black',
+        },
+        {
+          text:
+            'African American families may not be aware of care options/community resources, or there are barriers to access.',
+          source:
+            'https://www.healthnetworksolutions.net/index.php/understanding-different-cultures#Black',
+        },
+        {
+          text: `Blacks/African Americans face increased incidence of disease, including heart disease, stroke, kidney disease, diabetes, vascular dementia and Alzheimer's disease.`,
+          source:
+            'https://www.healthnetworksolutions.net/index.php/understanding-different-cultures#Black',
+        },
+        {
+          text: `Family caregivers may lack trust in service providers and this can show in response.  Time is necessary for building a trusting relationship.`,
+          source:
+            'https://www.healthnetworksolutions.net/index.php/understanding-different-cultures#Black',
+        },
+        {
+          text: `Important to address elders with titles such as "Mrs." or "Sir".`,
+          source:
+            'https://www.healthnetworksolutions.net/index.php/understanding-different-cultures#Black',
+        },
+      ],
+      specialized_insights: {
+        heart_disease: [
+          {
+            text:
+              'African Americans ages 18-49 are 2 times as likely to die from heart disease than whites.',
+            source: 'https://www.cdc.gov/vitalsigns/aahealth/index.html',
+          },
+        ],
+        blood_pressure: [
+          {
+            text:
+              'African Americans ages 35-64 years are 50% more likely to have high blood pressure than whites.',
+            source: 'https://www.cdc.gov/vitalsigns/aahealth/index.html',
+          },
+        ],
+      },
+    },
   ];
   administrators: [
     {
@@ -75,6 +147,5 @@
         activation: '',
       },
     },
-    // etc
   ];
 }

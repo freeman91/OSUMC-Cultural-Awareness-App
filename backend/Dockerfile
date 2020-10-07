@@ -5,7 +5,7 @@ MAINTAINER Scott Nicholas Hackman <snickhackman@gmail.com>
 RUN pip install pipenv
 
 WORKDIR /app
-ENV FLASK_APP=cultural_awareness/__init__.py
+ARG FLASK_APP=$FLASK_APP
 
 COPY . /app
 
