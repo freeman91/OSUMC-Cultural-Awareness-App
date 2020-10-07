@@ -32,7 +32,7 @@ db.createUser({
   pwd: 'password',
   roles: [
     {
-      role: 'readeWrite',
+      role: 'readWrite',
       db: 'database',
     },
   ],
