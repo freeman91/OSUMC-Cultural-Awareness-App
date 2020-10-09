@@ -15,7 +15,7 @@ TODO: update these variables
 
 ```sh
 FLASK_ENV=development
-FLASK_APP=api/__init__.py
+FLASK_APP=api/__main__.py
 MONGO_URI=mongodb://localhost:27017/
 MONGO_INITDB_DATABASE=database
 MONGO_INITDB_ROOT_USERNAME=user
