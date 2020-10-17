@@ -22,6 +22,7 @@ db.auth("user", "password")
 mongo --username user --password password --authenticationDatabase admin
 ```
 
+
 ## mongo shell commands
 
 [mongo shell docs](https://docs.mongodb.com/manual/reference/mongo-shell/)
