@@ -34,7 +34,7 @@ use <database>
 db.dropDatabase()
 db.createCollection('<collection>')
 show collections
-db.<collection>.insertOne({"name":'bill', "email": 'example@gmail.com'});
+db.<collection>.insertOne({name:'bill', email: 'example@gmail.com'});
 
 # show all documents in the collection
 db.<collection>.find()
