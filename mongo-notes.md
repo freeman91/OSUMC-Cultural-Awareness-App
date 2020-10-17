@@ -6,21 +6,6 @@ docker exec -it mongodb bash
 ps -edaf | grep mongo | grep -v grep
 
 # log into mongo shell with credentials
-
-mongo 
-use admin
-db.createUser(
-   {
-     user: "user",
-     pwd: "password", // or cleartext password
-     roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
-   }
-)
-db.auth("user", "password")
-
-
-#OR
-
 mongo --username user --password password --authenticationDatabase admin
 ```
 
@@ -36,7 +21,7 @@ use <database>
 db.dropDatabase()
 db.createCollection('<collection>')
 show collections
-db.<collection>.insertOne({name:'bill', email: 'example@gmail.com'});
+db.<collection>.insertOne({name: 'bill', email: 'example@gamil.com'})
 
 # show all documents in the collection
 db.<collection>.find()
