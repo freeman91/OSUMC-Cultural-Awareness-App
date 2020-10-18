@@ -6,19 +6,6 @@ docker exec -it mongodb bash
 ps -edaf | grep mongo | grep -v grep
 
 # log into mongo shell with credentials
-mongo 
-use admin
-db.createUser(
-   {
-     user: "user",
-     pwd: "password", // or cleartext password
-     roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
-   }
-)
-db.auth("user", "password")
-
-#OR
-
 mongo --username user --password password --authenticationDatabase admin
 ```
 
