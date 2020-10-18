@@ -11,6 +11,10 @@ This document structure is as follows
    2. [Usage](#Usage)
    3. [Implementation](#Implementation)
 3. [Oauth2](#Oauth2)
+   1. [Web Server Applications](#Web-Server-Applications)
+   2. [Providers](#Providers)
+   3. [Python Libraries](#Python-Libraries)
+4. [Future Direction](#Future-Direction)
 
 ## Authentication vs Authorization
 
@@ -96,7 +100,7 @@ JSON Web Tokens are a way to securely authenticate and (possibly) authorize a us
 Oauth2 allows users to login to their favorite platform and enables the Cultural Awareness application to view and use their information from that platform
 on our platform. This makes life easier for users only having to remember passwords for a given platform rather than an additional platform. They also don't have to add information to yet another account. Oauth2 also has many different workflows for different types of applications. This application will focus exclusively on Authorization Code.
 
-### Web server applications
+### Web Server Applications
 
 - [x] Needs a Frontend
 - [x] Needs a Backend
