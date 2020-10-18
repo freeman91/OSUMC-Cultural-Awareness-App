@@ -24,19 +24,10 @@ MONGO_IP=172.19.199.3
 MONGO_PORT=27017
 ```
 
-- create mongo-root-user.js
+## restore database
 
-```js
-db.createUser({
-  user: "user",
-  pwd: "password",
-  roles: [
-    {
-      role: "readWrite",
-      db: "database",
-    },
-  ],
-});
+```sh
+script/restore_dev_db.sh
 ```
 
 ## Running containers
