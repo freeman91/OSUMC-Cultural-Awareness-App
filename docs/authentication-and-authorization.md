@@ -35,9 +35,9 @@ JSON Web Tokens are a way to securely authenticate and (possibly) authorize a us
 
 ```json
 {
-    "admin": true,
-    "email": "test@example.com",
-    "exp": <expiration-date>,
+  "admin": true,
+  "email": "test@example.com",
+  "exp": "<expiration-date>"
 }
 ```
 
@@ -96,12 +96,14 @@ JSON Web Tokens are a way to securely authenticate and (possibly) authorize a us
 Oauth2 allows users to login to their favorite platform and enables the Cultural Awareness application to view and use their information from that platform
 on our platform. This makes life easier for users only having to remember passwords for a given platform rather than an additional platform. They also don't have to add information to yet another account. Oauth2 also has many different workflows for different types of applications. This application will focus exclusively on Authorization Code.
 
-### Authorization Code
+### Web server applications
 
 - [x] Needs a Frontend
 - [x] Needs a Backend
 - [x] has User Interaction
 - [x] Needs Client secret
+
+The steps for this method are best depcited by an image.
 
 ![Oauth2  Server application drawing](./images/OAuth2-Web-Server-Application.png)
 
