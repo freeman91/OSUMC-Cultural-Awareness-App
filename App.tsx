@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 //import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, FlatList, Button } from 'react-native';
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 
 function adminFunctions({ navigation }) {
       return (
@@ -138,6 +139,26 @@ function adminFunctions({ navigation }) {
                   </TouchableOpacity>
             </View>
 
+            <View style={{height: 100}} >
+                  <ScrollView style={styles.scrollView}>
+                        <TouchableOpacity 
+                        style = {styles.scrollButton}
+                        onPress={() => navigation.navigate('Manage Admins')}>
+                              <Text style = {styles.submitButtonText}> Manage Admins1 </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        style = {styles.scrollButton}
+                        onPress={() => navigation.navigate('Manage Admins')}>
+                              <Text style = {styles.submitButtonText}> Manage Admins2 </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        style = {styles.scrollButton}
+                        onPress={() => navigation.navigate('Manage Admins')}>
+                              <Text style = {styles.submitButtonText}> Manage Admins3 </Text>
+                        </TouchableOpacity>
+                  </ScrollView>
+            </View>
+
             <View><Text style={{fontSize: 30, height: 50}}>Delete Admin Account</Text>
                   <Text>Email:</Text>
             <TextInput
@@ -150,10 +171,6 @@ function adminFunctions({ navigation }) {
                   </TouchableOpacity>
             </View>
 
-            <Button
-                  title="Manage Admins"
-                  onPress={() => navigation.navigate('Manage Admins')}
-                  />
 
       </View>
 
@@ -302,5 +319,16 @@ const styles = StyleSheet.create({
  },
  submitButtonText:{
     color: 'white'
- }
+ },
+ scrollView: {
+      backgroundColor: 'Gray',
+      marginHorizontal: 20
+},
+scrollButton: {
+      backgroundColor: '#7a42f4',
+      padding: 10,
+      margin: 5,
+      height: 40,
+   },
+
 });
