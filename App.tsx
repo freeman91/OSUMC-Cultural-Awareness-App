@@ -1,13 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
 //import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button } from 'react-native';
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import t from 'tcomb-form-native';
+import { useState } from "react";
 import Constants from 'expo-constants';
 
 function adminFunctions({ navigation }) {
+      const [cultureGroup, setCultureGroup] = useState("");
+      const [delCultureGroup, deleteCultureGroup] = useState("");
+      const [cultureGenData, setGenCultureData] = useState("");
+      const [cultureSpecData, setCultureSpecData] = useState("");
+  
+      const handleSubmit = (evt) => {
+            evt.preventDefault();
+            fetch('http://localhost:5000').then(response => response.json()).then(data => console.log(cultureGroup));
+            alert(`Info Submitted ${cultureGroup}`)
+      }
+
+      const handleDelete = (evt) => {
+            evt.preventDefault();
+            fetch('http://localhost:5000').then(response => response.json()).then(data => console.log("hello"));
+            alert(`Culture Group Data for ${delCultureGroup} has been deleted!`)
+      }
+
       return (
             <View style={styles.container}>
             <View><Text style={{fontSize: 30, height: 50}}>Add new culture group</Text>
@@ -15,42 +34,42 @@ function adminFunctions({ navigation }) {
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  onChange={e => setCultureGroup(e.target.value)}
                   />
                   <Text>General insight for culture group:</Text>
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  onChange={e => setGenCultureData(e.target.value)}
                   />
                   <Text>Specialized insight for culture group:</Text>
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  onChange={e => setCultureSpecData(e.target.value)}
                   />
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Submit </Text>
-                  </TouchableOpacity>
+                  <Button title="Submit" onPress={handleSubmit} />
                   
             <View><Text style={{fontSize: 30, height: 50}}>Edit Culture Group</Text>
             <Text>Name of Culture Group:</Text>
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  onChange={e => setCultureGroup(e.target.value)}
                   />
                   <Text>General insight for culture group:</Text>
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  onChange={e => setGenCultureData(e.target.value)}
                   />
                   <Text>Specialized insight for culture group:</Text>
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  onChange={e => setCultureSpecData(e.target.value)}
                   />
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Submit </Text>
-                  </TouchableOpacity>
+                  <Button title="Submit" onPress={handleSubmit} />
             </View>
 
             <View><Text style={{fontSize: 30, height: 50}}>Delete culture group</Text>
@@ -58,11 +77,10 @@ function adminFunctions({ navigation }) {
             <TextInput
                   style={{height: 40}}
                   placeholder="Type here!"
+                  // value={cultureGroup}
+                  onChange={e => deleteCultureGroup(e.target.value)}
                   />
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Delete </Text>
-                  </TouchableOpacity>
+                  <Button title="Delete" onPress={handleDelete} />
             </View>
 
             <View><Text style={{fontSize: 30, height: 50}}>New Admin Account</Text>
@@ -86,17 +104,11 @@ function adminFunctions({ navigation }) {
                   style={{height: 40}}
                   placeholder="Type here!"
                   />
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Submit </Text>
-                  </TouchableOpacity>
+                  <Button title="Submit" onPress={handleSubmit} />
             </View>
 
             <View><Text style={{fontSize: 30, height: 50}}>Show List of Admins</Text>
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Show List </Text>
-                  </TouchableOpacity>
+            <Button title="Show List" onPress={handleSubmit} />
             </View>
 
 
@@ -106,10 +118,7 @@ function adminFunctions({ navigation }) {
                   style={{height: 40}}
                   placeholder="Type here!"
                   />
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Submit </Text>
-                  </TouchableOpacity>
+                  <Button title="Submit" onPress={handleSubmit} />
             </View>
 
             <View><Text style={{fontSize: 30, height: 50}}>Update Admin Account</Text>
@@ -165,16 +174,18 @@ function adminFunctions({ navigation }) {
                   style={{height: 40}}
                   placeholder="Type here!"
                   />
-                  <TouchableOpacity
-                  style = {styles.submitButton}>
-                  <Text style = {styles.submitButtonText}> Delete </Text>
-                  </TouchableOpacity>
+                  <Button title="Delete" onPress={handleDelete} />
             </View>
 
 
       </View>
 
 
+
+      <Button
+                  title="Manage Culture Data"
+                  onPress={() => navigation.navigate('adminFunctions')}
+      />
 
       <View style={styles.container}>
       </View>
@@ -321,7 +332,7 @@ const styles = StyleSheet.create({
     color: 'white'
  },
  scrollView: {
-      backgroundColor: 'Gray',
+      backgroundColor: 'gray',
       marginHorizontal: 20
 },
 scrollButton: {
