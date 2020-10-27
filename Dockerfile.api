@@ -1,8 +1,5 @@
 FROM python:3.8-slim
 
-MAINTAINER Scott Nicholas Hackman <snickhackman@gmail.com>
-
-
 RUN mkdir /appdata
 WORKDIR /appdata
 COPY . .
