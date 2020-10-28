@@ -11,7 +11,7 @@ import {homePage} from './frontend/views/homePage';
 
 
 
-function cultureGeneral({ navigation }) {
+function cultureInsights({ navigation }) {
       return (
             <View style={styles.container}>
                   
@@ -29,23 +29,7 @@ function cultureGeneral({ navigation }) {
       );
 }
 
-function cultureSpecialized({ navigation }) {
-      return (
-            <View style={styles.container}>
-                  
 
-                  <Button
-                  title="Manage Culture Data"
-                  onPress={() => navigation.navigate('homePage')}
-                  />
-
-
-            <View style={styles.container}>
-            </View>
-                  <StatusBar style="auto" />
-            </View>
-      );
-}
 
 function adminLogin({ navigation }) {
 
@@ -152,8 +136,7 @@ export default function App() {
       <NavigationContainer>{
             <Stack.Navigator initialRouteName="Home Page">
                   <Stack.Screen name="Home Page" component={homePage} />
-                  <Stack.Screen name="General Insights" component={cultureGeneral} />
-                  <Stack.Screen name="Specialized Insights" component={cultureSpecialized} />
+                  <Stack.Screen name="Culture Insights" component={cultureInsights} />
                   <Stack.Screen name="Edit Culture" component={cultureEdit} />
                   <Stack.Screen name="Admin Dashboard" component={adminDashboard} />
                   <Stack.Screen name="Admin Login" component={adminLogin} />
