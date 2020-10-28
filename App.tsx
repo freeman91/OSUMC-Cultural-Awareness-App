@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useState } from "react";
 import Constants from 'expo-constants';
-import {homePage} from './src/views/homePage';
+import {homePage} from './frontend/views/homePage';
 
 
 
