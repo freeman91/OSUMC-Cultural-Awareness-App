@@ -126,7 +126,7 @@ function cultureGeneral({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
@@ -144,7 +144,7 @@ function cultureSpecialized({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
@@ -162,7 +162,7 @@ function adminLogin({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
@@ -179,7 +179,7 @@ function adminRegistration({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
@@ -197,7 +197,7 @@ function adminDashboard({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
@@ -215,7 +215,7 @@ function cultureEdit({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
@@ -233,7 +233,7 @@ function editInsight({ navigation }) {
 
                   <Button
                   title="Manage Culture Data"
-                  onPress={() => navigation.navigate('adminFunctions')}
+                  onPress={() => navigation.navigate('homePage')}
                   />
 
 
