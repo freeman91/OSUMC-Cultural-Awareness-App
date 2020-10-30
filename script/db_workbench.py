@@ -59,12 +59,24 @@ def print_admins():
     print(db.admins.count_documents({}))
 
 
-def create_admin(name, email, password):
+def create_su_admin(name, email, password):
     return db.admins.insert_one(
         {
             "name": name,
             "email": email,
             "password": bcrypt.generate_password_hash(password),
+            "superUser": True,
+        }
+    )
+
+
+def create_admin(name, email, password, superUser):
+    return db.admins.insert_one(
+        {
+            "name": name,
+            "email": email,
+            "password": bcrypt.generate_password_hash(password),
+            "superUser": False,
         }
     )
 
