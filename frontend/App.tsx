@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { registerRootComponent } from 'expo';
 import { useState } from "react";
 import Constants from 'expo-constants';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {homePage} from './views/homePage';
 import {adminDashboard} from './views/adminDashboard';
 import {adminLogin} from './views/adminLogin';
@@ -20,6 +21,7 @@ const Stack = createStackNavigator();
 
 function App() {
   return (
+    <PaperProvider>
       <NavigationContainer>{
             <Stack.Navigator initialRouteName="Home Page">
                   <Stack.Screen name="Home Page" component={homePage} />
@@ -30,7 +32,8 @@ function App() {
                   <Stack.Screen name="Admin Registration" component={adminRegistration} />
                   <Stack.Screen name="Edit Insights" component={editInsight} />
             </Stack.Navigator>
-    }</NavigationContainer>
+      }</NavigationContainer>
+    </PaperProvider>
   );
 }
 
