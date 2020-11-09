@@ -68,7 +68,7 @@ export function CultureView(props: Props) {
 
   useEffect(() => {
     const fetchCulture = async (): Promise<void> => {
-      const culture = await Culture.detailed(cultureName);
+      const culture = await Culture.get(cultureName);
       console.log(culture);
       setCulture(culture);
     };
