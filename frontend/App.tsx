@@ -9,7 +9,6 @@ import { registerRootComponent } from "expo";
 import { homePage } from "./views/homePage";
 import { adminDashboard } from "./views/adminDashboard";
 import { adminLogin } from "./views/adminLogin";
-import { adminRegistration } from "./views/adminRegistration";
 import { CultureView } from "./views/culture";
 import { Routes } from "./routes";
 import { Theme } from "./constants";
@@ -21,7 +20,7 @@ function App() {
     <PaperProvider theme={Theme}>
       <NavigationContainer>
         {
-          <Stack.Navigator initialRouteName="Culture">
+          <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
               name="Culture"
               component={CultureView}
@@ -37,7 +36,7 @@ function App() {
             <Stack.Screen name="Home" component={homePage} />
             <Stack.Screen name="Dashboard" component={adminDashboard} />
             <Stack.Screen name="Login" component={adminLogin} />
-            <Stack.Screen name="Register" component={adminRegistration} />
+            <Stack.Screen name="Register" component={adminLogin} />
           </Stack.Navigator>
         }
       </NavigationContainer>
