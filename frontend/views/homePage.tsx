@@ -52,10 +52,7 @@ export function homePage({ navigation }) {
       }
     
     const handleAdminLogin = (evt) => {
-          navigation.navigate('Admin Login');
-          //alert('Pressed!')
-          
-
+          navigation.navigate('Login');
     }
 
     const EmptyListMessage = ({ item }) => {
