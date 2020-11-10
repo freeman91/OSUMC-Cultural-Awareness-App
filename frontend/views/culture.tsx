@@ -35,7 +35,7 @@ const Styles = StyleSheet.create({
   spinner: { top: "50%", position: "relative" },
 
   fab: {
-    position: "fixed",
+    position: "absolute",
     margin: 16,
     right: 0,
     bottom: 0,
