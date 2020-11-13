@@ -2,11 +2,14 @@
 Module for admin routes
 """
 from typing import Dict, List, Tuple
-
+from datetime import timedelta
 from flask import Flask, request
 from flask_bcrypt import Bcrypt  # type: ignore
 from flask_mail import Mail, Message  # type: ignore
-from flask_jwt_extended import jwt_required  # type: ignore
+from flask_jwt_extended import (  # type: ignore
+    jwt_required,
+    create_access_token,
+)
 
 from pymongo import MongoClient  # type:ignore
 
@@ -110,27 +113,31 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
         if isinstance(body, str):
             return {"msg": body}, 400
 
-        if db.admins.find_one({"email": body["email"]}) is not None:
+        email = body["email"]
+        if db.admins.find_one({"email": email}) is not None:
             return (
-                {"msg": f"<{body['email']}>: duplicate"},
+                {"msg": f"<{email}>: duplicate"},
                 409,
             )
+
+        token = create_access_token(identity=email, expires_delta=timedelta(days=1))
 
         msg = Message(
             "Account Activation",
             sender="osumc.cultural.awareness@gmail.com",
-            recipients=[f"{body['email']}"],
+            recipients=[f"{email}"],
         )
-        msg.html = """\
+        msg.html = f"""\
           <!DOCTYPE html>
           <html>
             <body>
-              <h1 style="color:SlateGray;">This is an HTML Email!</h1>
+              <h1 style="color:SlateGray;">Click the following link to register for an admin account</h1>
+              <a href="http://localhost:19006/Register?token={token}">Register<a/>
             </body>
           </html>
           """
         mail.send(msg)
-        return {"msg": f"email sent to {body['email']}"}, 200
+        return {"msg": f"email sent to {email}"}, 200
 
     @app.route("/v1/admin/<email>", methods=["PUT"])
     @jwt_required
