@@ -109,7 +109,7 @@ def create_token(email):
 if __name__ == "__main__":
     # instantiate db and app
     db = connect()
-    app = create_app(db)
+    app = create_app()
     app.config.update(
         SECRET_KEY=os.getenv("SECRET_KEY"),
         JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY"),
