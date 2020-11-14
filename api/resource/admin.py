@@ -35,11 +35,6 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
 
     mail = Mail(app)
 
-    @app.route("/v1/auth-check", methods=["GET"])
-    @jwt_required
-    def auth_check() -> Tuple[str, int]:
-        return "Authorized", 200
-
     @app.route("/v1/admin")
     @jwt_required
     def admins() -> Dict[str, List[str]]:
