@@ -1,26 +1,22 @@
 """
 Module for admin routes
 """
-import os
 from typing import Dict, List, Tuple
 from datetime import timedelta
 from flask import Flask, request
 from flask_bcrypt import Bcrypt  # type: ignore
-from flask_mail import Mail, Message  # type: ignore
 from flask_jwt_extended import (  # type: ignore
     jwt_required,
     create_access_token,
 )
 
 from pymongo import MongoClient  # type:ignore
-
+from ..mailer import send_invite_email
 from ..request_schemas import (
     validate_request_body,
     AdminInviteSchema,
     AdminUpdateSchema,
 )
-
-FRONTEND_IP = os.getenv("FRONTEND_IP")
 
 def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
     """
@@ -34,8 +30,6 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
 
     bcrypt: Bcrypt handle
     """
-
-    mail = Mail(app)
 
     @app.route("/v1/admin")
     @jwt_required
@@ -119,21 +113,8 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
 
         token = create_access_token(identity=email, expires_delta=timedelta(days=1))
 
-        msg = Message(
-            "Account Activation",
-            sender="osumc.cultural.awareness@gmail.com",
-            recipients=[f"{email}"],
-        )
-        msg.html = f"""\
-          <!DOCTYPE html>
-          <html>
-            <body>
-              <h1 style="color:SlateGray;">Click the following link to register for an admin account</h1>
-              <a href="http://{FRONTEND_IP}/Register?token={token}">Register<a/>
-            </body>
-          </html>
-          """
-        mail.send(msg)
+        send_invite_email(app, token, email)
+
         return {"msg": f"email sent to {email}"}, 200
 
     @app.route("/v1/admin/<email>", methods=["PUT"])
