@@ -1,6 +1,7 @@
 """
 Module for admin routes
 """
+import os
 from typing import Dict, List, Tuple
 from datetime import timedelta
 from flask import Flask, request
@@ -19,6 +20,7 @@ from ..request_schemas import (
     AdminUpdateSchema,
 )
 
+FRONTEND_IP = os.getenv("FRONTEND_IP")
 
 def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
     """
@@ -127,7 +129,7 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
           <html>
             <body>
               <h1 style="color:SlateGray;">Click the following link to register for an admin account</h1>
-              <a href="http://localhost:19006/Register?token={token}">Register<a/>
+              <a href="http://{FRONTEND_IP}/Register?token={token}">Register<a/>
             </body>
           </html>
           """

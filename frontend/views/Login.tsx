@@ -5,6 +5,7 @@ import { CommonActions } from "@react-navigation/native";
 import { Button, Card, TextInput } from "react-native-paper";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import jwt_decode from "jwt-decode";
 
 import { Admin } from "../api/admin";
 import { updateUser } from "../redux/UserAction";
@@ -26,6 +27,16 @@ function Login({ route, navigation, updateUser, user }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
+  React.useEffect(() => {
+    const token =
+      route.params !== undefined && route.params.token !== undefined
+        ? route.params.token
+        : "";
+
+    if (token) {
+      setEmail(jwt_decode(token).identity);
+    }
+  });
 
   const handleLogin = async () => {
     Admin.login(email, password)
@@ -108,6 +119,7 @@ function Login({ route, navigation, updateUser, user }) {
             mode="outlined"
             label="email"
             value={email}
+            disabled={!!email}
             onChangeText={(text) => setEmail(text)}
           />
           <TextInput
