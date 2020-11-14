@@ -5,11 +5,12 @@
 import os
 from flask_mail import Mail, Message  # type: ignore
 from jinja2 import Template
+from flask import Flask
 
 FRONTEND_IP = os.getenv("FRONTEND_IP")
 
 
-def send_invite_email(app: any, token: str, email: str) -> None:
+def send_invite_email(app: Flask, token: str, email: str) -> None:
     """
     Prepare the admin invite email and send it
 
