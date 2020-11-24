@@ -18,7 +18,8 @@ mongorestore "mongodb+srv://data-cluster.tjzlp.mongodb.net" --archive='db-backup
 MONGO_URI='mongodb+srv://ec2-user:<password>@data-cluster.tjzlp.mongodb.net/database?retryWrites=true&w=majority'
 ```
 
-it's also possible to connect your shell to the cluster with
+it's also possible to connect your shell directly to the cluster with
+contact Addison to generate new users if needed
 
 ```
 mongo "mongodb+srv://data-cluster.tjzlp.mongodb.net/<dbname>" --username <username>
