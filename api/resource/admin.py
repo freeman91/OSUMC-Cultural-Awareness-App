@@ -1,6 +1,6 @@
 """Module for admin routes."""
 from datetime import timedelta
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 from flask import Flask, request
 from flask_bcrypt import Bcrypt  # type: ignore
@@ -26,7 +26,7 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
 
     @app.route("/api/v1/admins")
     @jwt_required
-    def admins() -> Dict[str, List[str]]:
+    def admins() -> Dict[str, List[Dict[str, Union[str, bool]]]]:
         """List all admins.
 
         Returns:
@@ -38,7 +38,14 @@ def admin_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
           500 - otherwise
         """
         collection = db.admins
-        admins = [admin["email"] for admin in collection.find().sort("email")]
+        admins = [
+            {
+                "email": admin["email"],
+                "name": admin["name"],
+                "superUser": admin["superUser"],
+            }
+            for admin in collection.find().sort("email")
+        ]
         return {"admins": admins}
 
     @app.route("/api/v1/admins/<email>")
