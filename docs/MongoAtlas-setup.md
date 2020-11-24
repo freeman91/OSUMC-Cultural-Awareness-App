@@ -1,9 +1,25 @@
-### restore remote db from a backup file
+# Mongo Atlas setup
 
-mongorestore "mongodb+srv://data-cluster.tjzlp.mongodb.net" --archive='db-backup.bak' --username addison
+[Mongo Atlas Getting Started](https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/)
 
-Next:
+1. create account
+2. deploy a free tier cluster
+3. added my personal ip and the public ip of our prod ec2 instance in Network Access
+4. created an ec2-user in Database users
+5. used our db backup file to create our db in the atlas cluster
 
-- create admin user on atlas cluster
-- on production connect to cluster, dev connect to local mongo container
-- remove mongo service from ec2 instance
+```sh
+mongorestore "mongodb+srv://data-cluster.tjzlp.mongodb.net" --archive='db-backup.bak' --username ec2-user
+```
+
+6. connected our flask app to the cluster when it's running in production with this in .env
+
+```sh
+MONGO_URI='mongodb+srv://ec2-user:<password>@data-cluster.tjzlp.mongodb.net/database?retryWrites=true&w=majority'
+```
+
+it's also possible to connect your shell to the cluster with
+
+```
+mongo "mongodb+srv://data-cluster.tjzlp.mongodb.net/<dbname>" --username <username>
+```
