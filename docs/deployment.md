@@ -35,9 +35,11 @@ Route Table
 - install git  
   `yum -y install git-core`
 - install python  
-  `sudo yum install python3 pip3`
+  `sudo yum install python3 python3-devel pip3`
 - install python dependencies  
   `pip3 install -r /path/to/requirements.txt`
+- install c compiler
+  `sudo yum groupinstall "Development Tools" `
 
 - clone repo
 - add production .env file in the root of the app directory  
@@ -52,6 +54,9 @@ Route Table
 
 - create gunicorn service  
   `sudo vi /etc/systemd/system/gunicorn.service`
+  `sudo systemctl daemon-reload`
+  `sudo systemctl start gunicorn`
+  `sudo systemctl status gunicorn`
 
 ```
 [Unit]
