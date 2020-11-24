@@ -1,18 +1,17 @@
-## Steps to deploy production API serive to AWS
+# Steps to deploy production API service to AWS
 
-### Summary
+## Summary
 
 The backend API service is deployed and running on an [AWS EC2 instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html).  
-The following are the steps I took to setup the AWS resources and get an EC2 instance booted up and accepting incoming traffic.  
-Setup ec2 instance, AWS env around instance, Security Group (inbound/outbound traffic), AWS creds.  
-Then ssh into the instance, clone the repo, and start gunicorn service.
+Steps I took to setup the AWS resources and get an EC2 instance booted up and accepting incoming traffic.  
+Then steps to ssh into the instance, clone the repo, and start gunicorn service.
 
-### Updates to repo
+## Updates to repo
 
-- The EC2 instance will need to install python dependencies. (There is a way to start gunicorn using pipenv but I haven't tested that out yet)  
+- The EC2 instance will need to install python dependencies make sure requirements.txt is up to date. (There is probably a way to start gunicorn using pipenv but I haven't tested that out yet)  
   `pipenv run pip freeze > requirements.txt`
 
-### AWS Configuration
+## AWS Configuration
 
 This [Medium Article](https://medium.com/@shefaliaj7/hosting-react-flask-mongodb-web-application-on-aws-part-1-introduction-f49b1be79f48) was helpful to get all of the resources stood up on AWS.
 
@@ -29,9 +28,11 @@ VPC
 Public Subnet
 Route Table
 
-### Provision EC2 instance
+## Provision EC2 instance
 
-- [install mongodb](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/)
+- ~~[install mongodb](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/)~~  
+  (later I uninstalled mongodb because we are now using Mongo Atlas in production)
+
 - install git  
   `yum -y install git-core`
 - install python  
@@ -45,18 +46,13 @@ Route Table
 - add production .env file in the root of the app directory  
   set `FLASK_ENV=production`  
   keep everything else the same as dev
-
-- load env variables
-- restore the database
-  `mongorestore --archive='db-backup.bak'`
+- ~~restore the database
+  `mongorestore --archive='db-backup.bak'`~~
 
 - Add ssl cert to ec2 [docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html)
 
-- create gunicorn service  
+- create gunicorn service file  
   `sudo vi /etc/systemd/system/gunicorn.service`
-  `sudo systemctl daemon-reload`
-  `sudo systemctl start gunicorn`
-  `sudo systemctl status gunicorn`
 
 ```
 [Unit]
@@ -75,7 +71,16 @@ WantedBy=multi-user.target
 [Unit]
 ```
 
-## Steps to deploy producti on frontend to GithubPages
+- reload daemons
+  `sudo systemctl daemon-reload`
+- start gunicron service
+  `sudo systemctl start gunicorn`
+- check gunicron status
+  `sudo systemctl status gunicorn`
+- show gunicorn logs  
+  `journalctl -u gunicron.service`
+
+# Steps to deploy production on frontend to GithubPages
 
 [Expo | Publishing websites](https://docs.expo.io/distribution/publishing-websites/)
 
