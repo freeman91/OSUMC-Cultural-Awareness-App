@@ -42,11 +42,15 @@ Route Table
 - install c compiler
   `sudo yum groupinstall "Development Tools" `
 - install nginx
-  `sudo amazon-linux-extras install nginx1.12`
+  `sudo amazon-linux-extras install nginx1.12`  
+  had to `chmod 711 /home/ec2-user` at some point
 
 - registered the domain name: ` osumc-cultural-awareness.com` on freenom.com
 - created Route53, added a record to route traffic to the ec2 instance [article](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-ec2-instance.html)
 - change name servers of domain on freenom
+
+- install cert bot `sudo yum install -y certbot`
+- generate cert `sudo certbot certonly`
 
 - clone repo
 - add production .env file in the root of the app directory  
@@ -60,22 +64,6 @@ Route Table
 - create gunicorn service file  
   `sudo vi /etc/systemd/system/gunicorn.service`
 
-```
-[Unit]
-Description=Cultural Awareness API
-After=network.target
-
-[Service]
-User=ec2-user
-WorkingDirectory=/home/ec2-user/OSUMC-Cultural-Awareness-App
-ExecStart=/usr/local/bin/gunicorn -b 127.0.0.1:5000 -t 600 "api.__main__:app"
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-
-[Unit]
-```
 
 - reload daemons  
   `sudo systemctl daemon-reload`  
@@ -108,3 +96,8 @@ WantedBy=multi-user.target
 ```
 
 - `yarn deploy` bundles the application for production and pushes the generated dir `web-build/` to the `gh-pages` branch
+
+## Monitoring production environments
+
+### Mongo Atlas cluster
+https://cloud.mongodb.com/v2/5fbd1d47d242c47aa1327aa3#clusters
