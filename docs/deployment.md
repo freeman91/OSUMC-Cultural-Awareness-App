@@ -41,6 +41,12 @@ Route Table
   `pip3 install -r /path/to/requirements.txt`
 - install c compiler
   `sudo yum groupinstall "Development Tools" `
+- install nginx
+  `sudo amazon-linux-extras install nginx1.12`
+
+- registered the domain name: ` osumc-cultural-awareness.com` on freenom.com
+- created Route53, added a record to route traffic to the ec2 instance [article](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-ec2-instance.html)
+- change name servers of domain on freenom
 
 - clone repo
 - add production .env file in the root of the app directory  
@@ -71,16 +77,16 @@ WantedBy=multi-user.target
 [Unit]
 ```
 
-- reload daemons
-  `sudo systemctl daemon-reload`
-- start gunicron service
-  `sudo systemctl start gunicorn`
-- check gunicron status
-  `sudo systemctl status gunicorn`
+- reload daemons  
+  `sudo systemctl daemon-reload`  
+- start gunicron service  
+  `sudo systemctl start gunicorn`  
+- check gunicron status  
+  `sudo systemctl status gunicorn`  
 - show gunicorn logs  
   `journalctl -u gunicron.service`
 
-# Steps to deploy production on frontend to GithubPages
+# Steps to deploy frontend to GithubPages
 
 [Expo | Publishing websites](https://docs.expo.io/distribution/publishing-websites/)
 
