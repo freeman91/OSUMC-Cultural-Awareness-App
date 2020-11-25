@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/OSUMC-Cultural-Awareness-App/static/js/app.eb4b1ed6.chunk.js",
-    "app.js.map": "/OSUMC-Cultural-Awareness-App/static/js/app.eb4b1ed6.chunk.js.map",
+    "app.js": "/OSUMC-Cultural-Awareness-App/static/js/app.9d4472b7.chunk.js",
+    "app.js.map": "/OSUMC-Cultural-Awareness-App/static/js/app.9d4472b7.chunk.js.map",
     "runtime~app.js": "/OSUMC-Cultural-Awareness-App/static/js/runtime~app.3b9b3da0.js",
     "runtime~app.js.map": "/OSUMC-Cultural-Awareness-App/static/js/runtime~app.3b9b3da0.js.map",
     "static/js/2.72a03627.chunk.js": "/OSUMC-Cultural-Awareness-App/static/js/2.72a03627.chunk.js",
@@ -19,6 +19,6 @@
   "entrypoints": [
     "static/js/runtime~app.3b9b3da0.js",
     "static/js/2.72a03627.chunk.js",
-    "static/js/app.eb4b1ed6.chunk.js"
+    "static/js/app.9d4472b7.chunk.js"
   ]
 }
