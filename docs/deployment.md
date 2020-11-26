@@ -11,6 +11,9 @@ Then steps to ssh into the instance, clone the repo, and start gunicorn service.
 - The EC2 instance will need to install python dependencies make sure requirements.txt is up to date. (There is probably a way to start gunicorn using pipenv but I haven't tested that out yet)  
   `pipenv run pip freeze > requirements.txt`
 
+- had to remove flask_bcrypt because it was causing problems on production  
+  using functions from the werkzeug package instead
+
 ## AWS Configuration
 
 This [Medium Article](https://medium.com/@shefaliaj7/hosting-react-flask-mongodb-web-application-on-aws-part-1-introduction-f49b1be79f48) was helpful to get all of the resources stood up on AWS.
@@ -39,6 +42,9 @@ Route Table
   `sudo yum install python3 python3-devel pip3`
 - install python dependencies  
   `pip3 install -r /path/to/requirements.txt`
+
+  (had an issue with bcrypt causing login to crash only on production, solved the issue by uninstalling py-bcrypt)
+
 - install c compiler
   `sudo yum groupinstall "Development Tools" `
 - install nginx
@@ -49,8 +55,14 @@ Route Table
 - created Route53, added a record to route traffic to the ec2 instance [article](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-ec2-instance.html)
 - change name servers of domain on freenom
 
+- Add ssl cert to ec2 [docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html)
 - install cert bot `sudo yum install -y certbot`
 - generate cert `sudo certbot certonly`
+- this generates the a certificate and key  
+  cert: /etc/letsencrypt/live/www.osumc-cultural-awareness.com/fullchain.pem  
+  key: /etc/letsencrypt/live/www.osumc-cultural-awareness.com/privkey.pem  
+  This cert will expire on 2021-02-23. To obtain a new or tweaked version of this certificate in the future, simply run certbot again.
+
 
 - clone repo
 - add production .env file in the root of the app directory  
@@ -59,7 +71,6 @@ Route Table
 - ~~restore the database
   `mongorestore --archive='db-backup.bak'`~~
 
-- Add ssl cert to ec2 [docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html)
 
 - create gunicorn service file  
   `sudo vi /etc/systemd/system/gunicorn.service`
