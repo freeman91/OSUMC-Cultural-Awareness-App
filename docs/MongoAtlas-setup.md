@@ -1,5 +1,6 @@
 # Mongo Atlas setup
 
+[https://cloud.mongodb.com/v2/5fbd1d47d242c47aa1327aa3#clusters](Link to our production cluster)  
 [Mongo Atlas Getting Started](https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/)
 
 1. create account
