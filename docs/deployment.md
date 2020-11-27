@@ -1,16 +1,15 @@
 # Redeploy to production
 
 ## Backend server
-- generate requirements.txt locally, and push it to master if backend dependencies have changed before deploying to production server  
-  `pipenv run pip freeze > requirements.txt`
+
 - ssh in ec2 instance  
 `ssh -i <pem file> ec2-user@<Public IP of the EC2 instance>`
 - clone or fetch latest master
+- `pipenv install` if dependencies have changed
 - reload daemon  
   `sudo systemctl daemon-reload` 
 - start services  
-  `sudo systemctl start gunicorn`  
-  `sudo systemctl start nginx`
+  `sudo systemctl restart gunicorn && sudo systemctl restart nginx`
 - check status  
   `sudo systemctl status gunicorn`  
   `sudo systemctl status nginx`
@@ -54,6 +53,10 @@ Starting from a fresh Amazon Linux 2 instance
   `yum -y install git-core`
 - install python  
   `sudo yum install python3 python3-devel pip3`
+- [install python 3.8](https://tecadmin.net/install-python-3-8-amazon-linux/)
+- `sudo make && sudo make install`
+- `alias python3=python3.8, pip3=pip3.8`
+- `sudo pip3 install pipenv`
 - install c compiler (needed to build uWSGI)  
   `sudo yum groupinstall "Development Tools" `
 - install nginx  
@@ -94,8 +97,7 @@ SECRET_KEY=<secret_key>
 - reload daemon  
   `sudo systemctl daemon-reload` 
 - start services  
-  `sudo systemctl start gunicorn`  
-  `sudo systemctl start nginx`
+  `sudo systemctl start gunicorn && sudo systemctl start nginx`
 - check status  
   `sudo systemctl status gunicorn`  
   `sudo systemctl status nginx`
