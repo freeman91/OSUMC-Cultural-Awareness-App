@@ -1,4 +1,5 @@
 [Link to our production cluster](https://cloud.mongodb.com/v2/5fbd1d47d242c47aa1327aa3#clusters)  
+contact @freeman91 for login credentials
 
 # Mongo Atlas setup 
 [Mongo Atlas Getting Started](https://docs.atlas.mongodb.com/tutorial/deploy-free-tier-cluster/)
@@ -14,11 +15,11 @@
 MONGO_URI='mongodb+srv://<user>:<password>@data-cluster.tjzlp.mongodb.net/database?retryWrites=true&w=majority'
 ```
 
-- if your machine has mongodb installed connect your shell to the cluster with:
-contact Addison to generate new users if needed
+- if your machine has mongodb installed connect your shell to the cluster with:\
 ```sh
 mongo "mongodb+srv://<user>:<password>@data-cluster.tjzlp.mongodb.net/<dbname>"
 ```
+log into Mongo cluster to add users, or contact @freeman91 for credentials
 
 # Backup production database
 ```sh
