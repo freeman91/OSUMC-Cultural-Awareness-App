@@ -1,24 +1,25 @@
-# Redeploy to production
+# Deploy Manually
 
 ## Backend server
 
-- ssh in ec2 instance  
+1. ssh in ec2 instance  
 `ssh -i <pem file> ec2-user@<Public IP of the EC2 instance>`
-- clone or fetch latest master
-- `pipenv install` if dependencies have changed
-- reload daemon  
+2. checkout branch you want to deploy
+3. `pipenv install` if dependencies have changed
+4. reload daemon  
   `sudo systemctl daemon-reload` 
-- start services  
+5. start services  
   `sudo systemctl restart gunicorn && sudo systemctl restart nginx`
-- check status  
+6. check status  
   `sudo systemctl status gunicorn`  
   `sudo systemctl status nginx`
-- show logs  
+7. make sure services started without errors  
   `journalctl -u gunicron.service`
   `journalctl -u nginx` 
 
-## Github Pages
-- `yarn deploy`
+## Frontend
+1. checkout branch you want to deploy locally
+2. `yarn deploy`
 
 
 # AWS Initial Configuration steps
