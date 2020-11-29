@@ -1,35 +1,51 @@
 {
   "main": "node_modules/expo/AppEntry.js",
+  "homepage": "https://freeman91.github.io/OSUMC-Cultural-Awareness-App/",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject"
+    "start": "yarn env:dev && expo start",
+    "env:dev": "node script/setup-envs.js development",
+    "env:prod": "node script/setup-envs.js production",
+    "android": "yarn env:dev && expo start --android",
+    "ios": "yarn env:dev && expo start --ios",
+    "web": "yarn env:dev && expo start --web",
+    "eject": "expo eject",
+    "deploy": "gh-pages -d web-build",
+    "predeploy": "yarn env:prod && expo build:web"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/material-top-tabs": "^5.3.8",
     "@react-navigation/native": "^5.7.6",
     "@react-navigation/stack": "^5.9.3",
+    "@types/pako": "^1.0.1",
     "@types/react-native": "^0.63.30",
+    "@types/react-redux": "^7.1.11",
+    "@types/yup": "^0.29.9",
+    "dayjs": "^1.9.6",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
+    "formik": "^2.2.5",
+    "pako": "^1.0.11",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
     "react-native-gesture-handler": "~1.7.0",
     "react-native-paper": "^4.3.0",
     "react-native-reanimated": "~1.13.0",
-    "react-native-safe-area-context": "3.1.4",
+    "react-native-safe-area-context": "^3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-tab-view": "^2.15.2",
     "react-native-web": "~0.13.7",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "yup": "^0.30.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.2.0",
+    "typescript": "^4.1.2"
   },
   "private": true
 }

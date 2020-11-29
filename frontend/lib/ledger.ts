@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Brotli from "brotli";
+import * as Pako from "pako";
 
 import { Culture } from "./culture";
 
@@ -29,9 +29,11 @@ export namespace Ledger {
    * @remarks
    * This operation is really expensive.
    *
+   * @throws {@link ApiError}
+   * @throws {@link OfflineError}
    *
    * @throws network errors from {@link fetch}
-   * @throws brotli errors from {@link Brotli}
+   * @throws zlib errors from {@link Pako}
    * @throws storage failures from {@link AsyncStorage}
    * @throws JSON errors from {@link JSON}
    */
@@ -47,26 +49,6 @@ export namespace Ledger {
         }
       }
     );
-
-    const data = JSON.stringify({ cultures: cultures });
-    await AsyncStorage.setItem(LOCATION, data);
-  }
-
-  /**
-   * Fetches, Compress information about a provided culture.
-   *
-   * @param {string} name of culture
-   *
-   * @throws network errors from {@link fetch}
-   * @throws brotli errors from {@link Brotli}
-   * @throws JSON errors from {@link JSON}
-   *
-   * @returns {Promise<Uint8Array>} compressed bytes
-   */
-  async function compress(name: string): Promise<Uint8Array> {
-    const info = await Culture.get(name);
-    const buf = Buffer.from(JSON.stringify(info));
-    return Brotli.compress(buf, { mode: 1 });
   }
 
   /**
@@ -80,11 +62,12 @@ export namespace Ledger {
    */
   export async function list(): Promise<Map<string, number>> {
     const data = await AsyncStorage.getItem(LOCATION);
-    if (data === null) {
+    if (!data) {
       return new Map();
     }
 
-    return JSON.parse(data).cultures;
+    let ledger = JSON.parse(data)["cultures"];
+    return new Map(Object.entries(ledger));
   }
 
   /**
@@ -94,14 +77,30 @@ export namespace Ledger {
    *
    * @throws JSON errors from {@link JSON}
    * @throws storage failures from {@link AsyncStorage}
-   * @throw brotli errors from {@link Brotli}
+   * @throw pako errors from {@link Pako}
    *
    * @returns {Promise<Culture>} culture read
    */
   export async function read(culture: string): Promise<Culture> {
     const storedData = await AsyncStorage.getItem(culture);
-    const data = Brotli.decompress(Buffer.from(storedData));
-    return JSON.parse(data.toString());
+    if (!storedData) {
+      throw new Error(`${culture}: culture download not found`);
+    }
+
+    const data: string = Pako.inflate(storedData, { to: "string" });
+    return JSON.parse(data);
+  }
+
+  /**
+   * saveLedger save the ledger to storage
+   *
+   * @param {Map} cultures to save
+   */
+  function saveLedger(cultures: Map<string, number>) {
+    let ledger = { cultures: {} };
+    cultures.forEach((val, key) => (ledger.cultures[key] = val));
+
+    AsyncStorage.setItem(LOCATION, JSON.stringify(ledger));
   }
 
   /**
@@ -109,14 +108,21 @@ export namespace Ledger {
    *
    * @param {string} culture
    *
-   * @throws network errors from {@link fetch}
+   *
+   * @throws {@link ApiError}
+   * @throws {@link OfflineError}
    * @throws JSON errors from {@link JSON}
    * @throws storage failures from {@link AsyncStorage}
-   * @throw brotli errors from {@link Brotli}
+   * @throw pako errors from {@link Pako}
    */
   export async function add(culture: string) {
-    const data = await compress(culture);
-    AsyncStorage.setItem(name, data.toString());
+    const info = await Culture.get(culture);
+    const compressed = Pako.deflate(JSON.stringify(info), { to: "string" });
+    AsyncStorage.setItem(culture, compressed.toString());
+
+    let cultures = await list();
+    cultures.set(culture, info.modified);
+    saveLedger(cultures);
   }
 
   /**
@@ -128,10 +134,13 @@ export namespace Ledger {
    * @param {string} culture to remove
    */
   export async function remove(culture: string) {
-    const cultures = await list();
+    let cultures = await list();
 
     if (cultures.has(culture)) {
       AsyncStorage.removeItem(culture);
     }
+
+    cultures.delete(culture);
+    saveLedger(cultures);
   }
 }

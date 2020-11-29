@@ -1,92 +1,110 @@
-import { StatusBar } from "expo-status-bar";
-//import React from 'react';
-import { StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+
 import "react-native-gesture-handler";
-import * as React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import { Provider as PaperProvider, Button, Avatar } from "react-native-paper";
+import { Provider as PaperProvider } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { connect } from "react-redux";
 
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { registerRootComponent } from "expo";
-import Home from "./views/Home";
-import { adminDashboard } from "./views/adminDashboard";
-import Login from "./views/Login";
-import { cultureInsights } from "./views/cultureInsights";
-import { Routes } from "./routes";
-import { Theme } from "./constants";
-import userReducer from "./redux/UserReducer";
 
-const store = createStore(userReducer);
+import {
+  Home,
+  Login,
+  Culture,
+  EditInsight,
+  Register,
+  Recovery,
+  Settings,
+  Header,
+} from "./views";
+
+import { Routes, Linking } from "./routes";
+import { lightTheme, darkTheme, ThemeStorage, ThemeType } from "./theme";
+import { Reducer, updateTheme, Store } from "./redux";
+
+const store = createStore(Reducer);
 
 function App() {
-  const Stack = createStackNavigator<Routes>();
-  const linking = {
-    prefixes: ["/"],
-  };
+  useEffect(() => {
+    const getTheme = async () => {
+      let theme: ThemeType;
+      try {
+        theme = (await AsyncStorage.getItem(ThemeStorage)) as ThemeType;
+      } catch (err) {
+        theme = "Light";
+      }
+
+      if (!theme) {
+        theme = "Light";
+      }
+
+      store.dispatch(updateTheme(theme));
+    };
+
+    getTheme();
+  }, []);
 
   return (
-    <PaperProvider theme={Theme}>
-      <Provider store={store}>
-        <NavigationContainer linking={linking}>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen
-              name="Culture"
-              component={cultureInsights}
-              initialParams={{ cultureName: "African Americans" }}
-              options={{
-                headerRight: () => (
-                  <Button onPress={() => console.log("button pressed")}>
-                    <Avatar.Text size={36} label="NH" />
-                  </Button>
-                ),
-              }}
-            />
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Dashboard" component={adminDashboard} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Login} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
-    </PaperProvider>
+    <Provider store={store}>
+      <NavigatorScreen />
+    </Provider>
   );
 }
 
-export default registerRootComponent(App);
+type NavigatorProps = {
+  theme: ThemeType;
+};
 
-const styles = StyleSheet.create({
-  emptyListStyle: {
-    padding: 10,
-    fontSize: 18,
-    textAlign: "center",
-  },
-  itemStyle: {
-    padding: 10,
-  },
-  img: {
-    padding: 35,
-    height: 70,
-    width: "25%",
-  },
-  headerFooterStyle: {
-    width: "100%",
-    height: 45,
-    backgroundColor: "#606070",
-  },
-  bottomFooterStyle: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    height: 80,
-    backgroundColor: "#606070",
-  },
-  textStyle: {
-    textAlign: "center",
-    color: "#fff",
-    fontSize: 18,
-    padding: 7,
-  },
-});
+/**
+ * Navigator contained inside of {@link App} manages navigation and theming.
+ *
+ * @remark This component isn't just inside of {@link App} because it needs to connect
+ * to the Redux store in order to properly re-render when a change to the theme is done.
+ *
+ * @param {NavigatorProps} props
+ * @returns {React.ReactElement}
+ */
+function Navigator(props: NavigatorProps): React.ReactElement {
+  const { theme } = props;
+
+  const Stack = createStackNavigator<Routes>();
+
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer
+        linking={Linking}
+        theme={theme === "Dark" ? DarkTheme : DefaultTheme}
+      >
+        <PaperProvider theme={theme === "Dark" ? darkTheme : lightTheme}>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Culture" component={Culture} options={Header} />
+            <Stack.Screen name="Home" component={Home} options={Header} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="EditInsight" component={EditInsight} />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Recovery" component={Recovery} />
+          </Stack.Navigator>
+        </PaperProvider>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
+}
+
+const NavigatorScreen = connect(
+  (state: Store) => ({
+    theme: state.theme,
+  }),
+  null
+)(Navigator);
+
+export default registerRootComponent(App);

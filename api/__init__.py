@@ -1,61 +1,58 @@
-"""
-Flask API for interacting with OSUMC-Cultural Awareness App
+"""Flask API for interacting with OSUMC-Cultural Awareness App.
 
 Routes Specified:
   https://docs.google.com/spreadsheets/d/19zLqvcoFI7Jm_y6nPPgcRmaBuPEkDKtgeiyozekbMoU/edit?usp=sharing
 """
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
-from flask import Flask
-
+from flask import Flask, request
 from pymongo import MongoClient  # type:ignore
+
+from .mailer import send_feedback
+from .request_schemas import FeedbackSchema, validate_request_body
 
 
 def create_app() -> Flask:
-    """
-    Construct Flask App with all Endpoints
+    """Construct Flask App with all Endpoints.
 
     Returns:
-
       Flask app
     """
     app = Flask(__name__)
 
-    @app.route("/")
-    def index() -> Dict[str, List[Dict[str, Any]]]:
-        """
-        Index that informs user about routes
+    @app.route("/health")
+    def health() -> Tuple[Dict[str, str], int]:
+        """Health route."""
+        return {"msg": "healthy"}, 200
 
-        Returns:
+    @app.route("/api/v1/feedback", methods=["POST"])
+    def feedback() -> Tuple[Dict[str, str], int]:
+        """Send feedback to $GMAIL_USERNAME.
 
-          200 - JSON containing all routes
+        Arguments:
+          POST Body:
 
           {
-            "routes": [
-              {
-                "methods": [
-                  "POST",
-                  "OPTIONS"
-                ],
-                "url": "/v1/admin/invite"
-              },
-              ...
-            ]
+            "feedback": "...",
           }
 
-          500 - otherwise
-        """
-        response: Dict[str, List[Dict[str, Any]]] = {"routes": []}
-        for rule in app.url_map.iter_rules():
-            route = {"url": f"{rule.rule}", "methods": list(rule.methods)}
-            response["routes"].append(route)
-        return response
+        Returns:
+          200 - feedback sent
 
-    @app.route("/v1/health")
-    def health():
+          {"msg": "feedback sent"}
+
+          400 - malformed request
+          500 - otherwise
+
         """
-        Health route
-        """
-        return {"msg": "healthy"}
+        body = validate_request_body(FeedbackSchema, request.json)
+        if isinstance(body, str):
+            return {"msg": body}, 400
+
+        feedback = body["feedback"]
+
+        send_feedback(app, feedback)
+
+        return {"msg": "feedback sent"}, 200
 
     return app

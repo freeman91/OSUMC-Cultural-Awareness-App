@@ -56,39 +56,25 @@ export default function Admins(props: AdminProps): React.ReactElement {
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
           return (
-            <View>
-              <List.Item
-                title={item.email}
-                onPress={() => {
-                  Alert.alert("user pressed", item.name, [
-                    { text: "OK", onPress: () => console.log("OK Pressed") },
-                  ]);
-                }}
-                right={() =>
-                  props.token !== "" && (
-                    <View style={{ flexDirection: "row" }}>
-                      <IconButton icon="pencil" onPress={() => onEdit(item)} />
-                      <IconButton
-                        icon="delete"
-                        onPress={() => onDelete(item.email)}
-                      />
-                    </View>
-                  )
-                }
-              />
-              <Portal>
-                <Modal
-                  visible={deleteModal}
-                  onDismiss={() => setDeleteModal(false)}
-                >
-                  <Text>Are you sure you want to delete {item.email}</Text>
-                  <IconButton
-                    icon="delete"
-                    onPress={() => onDelete(item.email)}
-                  />
-                </Modal>
-              </Portal>
-            </View>
+            <List.Item
+              title={item.email}
+              onPress={() => {
+                Alert.alert("user pressed", item.name, [
+                  { text: "OK", onPress: () => console.log("OK Pressed") },
+                ]);
+              }}
+              right={() =>
+                props.token !== "" && (
+                  <View style={{ flexDirection: "row" }}>
+                    <IconButton icon="pencil" onPress={() => onEdit(item)} />
+                    <IconButton
+                      icon="delete"
+                      onPress={() => onDelete(item.email)}
+                    />
+                  </View>
+                )
+              }
+            />
           );
         }}
       />

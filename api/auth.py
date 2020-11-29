@@ -1,65 +1,56 @@
-"""
-Module for Authentication and Authorization Routes
-"""
+"""module for Authentication and Authorization Routes."""
 from datetime import timedelta
-from json import dumps
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 from flask import Flask, request
-
-from flask_bcrypt import Bcrypt  # type: ignore
-from flask_jwt_extended import (  # type: ignore
-    JWTManager,
-    jwt_required,
-    create_access_token,
-)
-
+from flask_jwt_extended import JWTManager  # type: ignore
+from flask_jwt_extended import create_access_token, jwt_required
 from pymongo import MongoClient  # type: ignore
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from .request_schemas import (
-    validate_request_body,
-    AdminLoginSchema,
-    AdminRegisterSchema,
-)
+from .request_schemas import (AdminLoginSchema, AdminRegisterSchema,
+                              validate_request_body)
 
 
-def auth_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
-    """
-    Setup JWT Authentication via flask_jwt_extended and Login and Register route
+def auth_routes(app: Flask, db: MongoClient) -> None:
+    """Setup JWT Authentication via flask_jwt_extended and Login and Register route.
 
     Docs: https://flask-jwt-extended.readthedocs.io/en/latest/basic_usage/
 
-    Parameters:
+    Arguments:
         app: Flask app
 
         db: MongoDB client
 
-        bcrypt: Bcrypt handle
     """
     jwt = JWTManager(app)
 
-    @app.route("/v1/login", methods=["POST"])
+    @app.route("/api/v1/login", methods=["POST"])
     def login() -> Tuple[Dict[str, str], int]:
-        """
-        Login a User
+        """Login a User.
 
-        Parameters:
-
+        Arguments:
           POST body:
-
           {
             "email": "email",
             "password": "password"
           }
 
-          Returns:
-            200 - Oauth token
+        Returns:
+          200 - Oauth token
 
-            {"token": JWT}
+          {
+            "token": JWT,
+            "user": {
+              "name": "name",
+              "email": "test@gmail.com",
+              "superUser": false
+            }
+          }
 
-            400 - malformed request body
-            401 - wrong password
-            500 - otherwise
+          400 - malformed request body
+          401 - wrong password
+          500 - otherwise
         """
         body = validate_request_body(AdminLoginSchema, request.json)
         if isinstance(body, str):
@@ -73,25 +64,30 @@ def auth_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
         if not admin:
             return {"msg": "Invalid username or password"}, 401
 
-        if not bcrypt.check_password_hash(admin["password"], password):
+        if not check_password_hash(admin["password"], password):
             return {"msg": "Invalid username or password"}, 401
 
-        return {
-            "token": create_access_token(
-                identity=email, expires_delta=timedelta(days=1)
-            )
-        }, 200
+        admin["_id"] = str(admin["_id"])
+        del admin["password"]
 
-    @app.route("/v1/register", methods=["POST"])
+        return (
+            {
+                "token": create_access_token(
+                    identity=email, expires_delta=timedelta(days=1)
+                ),
+                "user": admin,
+            },
+            200,
+        )
+
+    @app.route("/api/v1/register", methods=["POST"])
     @jwt_required
-    def register() -> Tuple[Dict[str, str], int]:
-        """
-        Register a new administrator
+    def register() -> Tuple[Dict[str, Any], int]:
+        """Register a new administrator.
 
         JWT is passed via
 
-        Parameters:
-
+        Arguments:
           POST Body:
 
           {
@@ -104,7 +100,14 @@ def auth_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
         Returns:
           200 - New admin created
 
-          {"token": JWT}
+          {
+            "token": JWT,
+            "user": {
+              "name": "name",
+              "email": "test@gmail.com",
+              "superUser": false
+            }
+          }
 
           400 - Malformed body
           401 - unauthorized
@@ -129,7 +132,7 @@ def auth_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
                 409,
             )
 
-        body["password"] = bcrypt.generate_password_hash(body["password"])
+        body["password"] = generate_password_hash(body["password"])
         body["superUser"] = False
 
         result = db.admins.insert_one(body)
@@ -139,9 +142,12 @@ def auth_routes(app: Flask, db: MongoClient, bcrypt: Bcrypt) -> None:
         del body["password"]
         body["_id"] = str(body["_id"])
 
-        return {
-            "user": dumps(body),
-            "token": create_access_token(
-                identity=body["email"], expires_delta=timedelta(days=1)
-            ),
-        }, 201
+        return (
+            {
+                "user": body,
+                "token": create_access_token(
+                    identity=body["email"], expires_delta=timedelta(days=1)
+                ),
+            },
+            201,
+        )

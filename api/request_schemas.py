@@ -1,16 +1,13 @@
-"""
-Module for request body schemas and validation function
-"""
-from typing import Any, Dict, Union
-from marshmallow import Schema, fields, ValidationError
+"""Module for request body schemas and validation function."""
+from typing import Any, Dict, Optional, Union
+
+from marshmallow import Schema, ValidationError, fields
 
 
 class InsightSchema(Schema):
-    """
-    Structure of insights
+    """Structure of insights.
 
     Format:
-
     {
       "summary": "summary",
       "information": "text",
@@ -26,12 +23,39 @@ class InsightSchema(Schema):
     source = fields.Dict(keys=fields.String(), values=fields.String(), required=True)
 
 
-class CultureCreateSchema(Schema):
+def feedback_validator(feedback: str) -> Optional[ValidationError]:
+    """Feedback validator, checks if the feedback has 0 < x < 300 characters.
+
+    Arguments:
+      feedback: feedback to validate
+
+    Returns:
+      ValidationError or None - None meaning valid input
     """
-    POST /vi/culture
+    if len(feedback) == 0:
+        return ValidationError("Feedback is too short")
+    if len(feedback) > 300:
+        return ValidationError("Feedback is too long")
+
+    return None
+
+
+class FeedbackSchema(Schema):
+    """POST /api/v1/feedback.
 
     Format:
+    {
+      "feedback": "..."
+    }
+    """
 
+    feedback = fields.String(validate=feedback_validator, required=True)
+
+
+class CultureCreateSchema(Schema):
+    """POST /api/v1/cultures.
+
+    Format:
     {
       "name": "culture"
     }
@@ -41,11 +65,9 @@ class CultureCreateSchema(Schema):
 
 
 class CultureUpdateSchema(Schema):
-    """
-    PUT /v1/culture/<name>
+    """PUT /api/v1/cultures/<name>.
 
     Format:
-
     {
       "name": "Culture",
       "general_insights": [],
@@ -62,11 +84,9 @@ class CultureUpdateSchema(Schema):
 
 
 class AdminLoginSchema(Schema):
-    """
-    POST /v1/login
+    """POST /api/v1/login.
 
     Format:
-
     {
       "email": "test@gmail.com",
       "password": "password"
@@ -78,11 +98,9 @@ class AdminLoginSchema(Schema):
 
 
 class AdminRegisterSchema(Schema):
-    """
-    POST /v1/register
+    """POST /api/v1/register.
 
     Format:
-
     {
       "name": "name",
       "email": "test@gmail.com",
@@ -97,12 +115,10 @@ class AdminRegisterSchema(Schema):
     password_confirmation = fields.String(required=True)
 
 
-class AdminInviteSchema(Schema):
-    """
-    POST /v1/admin/invite
+class AdminEmailSchema(Schema):
+    """POST /api/v1/admins/invite and /api/v1/admins/recover.
 
     Format:
-
     {
       "email": "test@gmail.com"
     }
@@ -112,11 +128,9 @@ class AdminInviteSchema(Schema):
 
 
 class AdminUpdateSchema(Schema):
-    """
-    PUT /v1/admin/<email>
+    """PUT /api/v1/admins/<email>.
 
     Format:
-
     {
       "email": "test@gmail.com",
       "name": "name",
@@ -134,9 +148,7 @@ class AdminUpdateSchema(Schema):
 
 
 def validate_request_body(schema, body: Dict) -> Union[str, Dict[str, Any]]:
-    """
-    Validates a request body using the corresponding request schema
-    """
+    """Validates a request body using the corresponding request schema."""
     try:
         return schema().load(body)
     except ValidationError as err:

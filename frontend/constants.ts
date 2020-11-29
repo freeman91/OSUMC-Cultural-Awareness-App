@@ -1,11 +1,3 @@
-import { DefaultTheme } from "react-native-paper";
+export const TermsOfServiceURL = "http://www.google.com";
 
-export const API_URL = "http://localhost:5000/v1";
-
-export const Theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: "#1e88e5",
-  },
-};
+export const disclaimerURL = "http://www.google.com";

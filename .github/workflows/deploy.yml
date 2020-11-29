@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  backend-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute update script
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: OSUMC-Cultural-Awareness-App/script/restart_services.sh
+          username: "ec2-user"
+          host: "www.osumc-cultural-awareness.com"
+          privateKey: ${{ secrets.SSH_KEY }}
+
+  frontend-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12.x"
+          check-latest: true
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+
+      - run: yarn install
+      - run: yarn env:prod
+      - run: expo build:web
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: web-build/

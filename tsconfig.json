@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ES2017"],
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "jsx": "react-native"
+  },
+  "include": ["frontend/**/*"]
+}
