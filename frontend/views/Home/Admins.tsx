@@ -111,7 +111,6 @@ function Admins(props: AdminProps): React.ReactElement {
                 onDismiss={() => setDeleteModal(false)}
               >
                 <Text>Are you sure you want to delete {selectedItem.email}?</Text>
-                {/* TODO: Currently opens modal for every item. Very bad*/}
                 <Button
                   mode="contained"
                   onPress={() => {
@@ -135,8 +134,6 @@ function Admins(props: AdminProps): React.ReactElement {
                 }
                 onDismiss={() => setEditModal(false)}
               >
-                {" "}
-                {/* TODO: Currently opens modal for every item. Very bad*/}
                 <Text>Enter the new name for {selectedItem.name}:</Text>
                 <TextInput
                   label="Name"
