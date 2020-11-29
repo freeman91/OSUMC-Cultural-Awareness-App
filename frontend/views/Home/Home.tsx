@@ -13,6 +13,8 @@ import {
   Modal,
   Text,
   ActivityIndicator,
+  TextInput,
+  Button,
 } from "react-native-paper";
 
 import { Store } from "../../redux";
@@ -22,12 +24,14 @@ import { Routes } from "../../routes";
 import Cultures from "./Cultures";
 import Admins from "./Admins";
 import styles from "./styles";
+import InviteFAB from "./InviteFAB"
 
 type Props = {
   navigation: StackNavigationProp<Routes, "Home">;
   route: RouteProp<Routes, "Home">;
   user: Admin;
   token: string;
+  theme: string;
 };
 
 type TabProps = {
@@ -38,11 +42,12 @@ type TabProps = {
 const Tab = createMaterialTopTabNavigator<TabProps>();
 
 function Home(props: Props): React.ReactElement {
-  const { token, route, navigation, user } = props;
+  const { token, route, navigation, user, theme } = props;
 
   const [cultures, setCultures] = useState(null);
   const [admins, setAdmins] = useState(null);
-  const [inviteModal, setInviteModal] = useState(false);
+  const [inviteModal, setInviteModal] = React.useState(false);
+  const [inviteText, setInviteText] = React.useState("");
   const window = useWindowDimensions();
   const safeArea = useSafeAreaInsets();
 
@@ -110,17 +115,17 @@ function Home(props: Props): React.ReactElement {
   //
   // Web: use position: fixed.
   // Mobile: useWindowDimensions hook, this doesn't work on Web.
-  const fabStyles = {
-    margin: 16,
-    right: 0,
-    position: Platform.OS === "web" ? "fixed" : "absolute",
-  };
+  // const fabStyles = {
+  //   margin: 16,
+  //   right: 0,
+  //   position: Platform.OS === "web" ? "fixed" : "absolute",
+  // };
 
-  if (Platform.OS !== "web") {
-    fabStyles["top"] = window.height - safeArea.bottom;
-  } else {
-    fabStyles["bottom"] = 0;
-  }
+  // if (Platform.OS !== "web") {
+  //   fabStyles["top"] = window.height - safeArea.bottom;
+  // } else {
+  //   fabStyles["bottom"] = 0;
+  // }
 
   return (
     <View>
@@ -145,6 +150,34 @@ function Home(props: Props): React.ReactElement {
           )}
         </Tab.Screen>
       </Tab.Navigator>
+      <InviteFAB // TODO: make visible only on admins tab. Check what tab is selected?; Get theme to work correctly.
+        onPress={() => setInviteModal(!inviteModal)}
+      />
+      <Portal>
+        <Modal
+          visible={inviteModal}
+          contentContainerStyle={theme === 'Dark' ? styles.modalDark : styles.modalLight /*doesn't know what theme is active*/}
+          onDismiss={() => setInviteModal(false)}
+        >
+          <TextInput
+            label="Email"
+            value={inviteText}
+            onChangeText={(inviteText) => setInviteText(inviteText)}
+          />
+          <Button
+            mode="contained"
+            onPress={() => {
+              onInvite(inviteText);  
+              setInviteModal(false);
+            }}
+          >
+            Send Invite
+          </Button>
+          <Button mode="contained" onPress={() => setInviteModal(false)}>
+            Cancel
+          </Button>
+        </Modal>
+      </Portal>
       {/*<FAB icon="plus" style={fabStyles as any} onPress={onAdd} />
       <Portal>
         <Modal visible={inviteModal} onDismiss={() => setInviteModal(false)}>
