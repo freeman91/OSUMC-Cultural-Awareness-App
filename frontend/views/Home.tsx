@@ -21,6 +21,7 @@ import {
   IconButton,
   Modal,
   Portal,
+  TextInput,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
@@ -77,9 +78,9 @@ const styles = StyleSheet.create({
   view: {
     height: "100%",
   },
-  inviteModal: {
+  modal: {
     padding: 20,
-    background: "white",
+    backgroundColor: "white",
   },
 });
 
@@ -223,6 +224,10 @@ type AdminProps = {
 function Admins(props: AdminProps): React.ReactElement {
   const [users, setUsers] = useState(null);
   const [visible, setVisible] = React.useState(false);
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [editModal, setEditModal] = React.useState(false);
+  const [editText, setEditText] = React.useState('');
+  const [inviteText, setInviteText] = React.useState('');
   useEffect(() => {
     fetchAdminData();
   }, []);
@@ -252,6 +257,7 @@ function Admins(props: AdminProps): React.ReactElement {
     superUser: boolean;
   }) => {
     //TODO: update Admin.update() perams
+    //    Don't send any requests
     try {
       //Admin.update(email, props.token)
       fetchAdminData();
@@ -260,9 +266,9 @@ function Admins(props: AdminProps): React.ReactElement {
     }
   };
 
-  const onInvite = async (email: string) => {
+  const onInvite = async () => {
     try {
-      await Admin.invite(email, props.token);
+      await Admin.invite(inviteText, props.token);
     } catch (err) {
       // show error message
     }
@@ -282,25 +288,51 @@ function Admins(props: AdminProps): React.ReactElement {
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
           return (
-            <List.Item
-              title={item.email}
-              onPress={() => {
-                Alert.alert("user pressed", item.name, [
-                  { text: "OK", onPress: () => console.log("OK Pressed") },
-                ]);
-              }}
-              right={() =>
-                props.token ? (
-                  <>
-                    <IconButton icon="pencil" onPress={() => onEdit(item)} />
-                    <IconButton
-                      icon="delete"
-                      onPress={() => onDelete(item.email)}
-                    />
-                  </>
-                ) : null
-              }
-            />
+            <View>
+              <List.Item
+                title={item.email}
+                onPress={() => {}}
+                right={() =>
+                  props.token !== "" && (
+                    <View style={{ flexDirection: "row" }}>
+                      <IconButton icon="pencil" onPress={() => setEditModal(!editModal)} />
+                      <IconButton
+                        icon="delete"
+                        onPress={() => setDeleteModal(!deleteModal)}
+                      />
+                    </View>
+                  )
+                }
+              />
+              <Portal>
+                <Modal visible={deleteModal} contentContainerStyle={styles.modal} onDismiss={() => setDeleteModal(false)}>
+                  <Text>Are you sure you want to delete {item.email}</Text>
+                  <IconButton
+                    icon="delete"
+                    onPress={() => onDelete(item.email)}
+                  />
+                  <Button mode='outlined' onPress={() => setDeleteModal(false)}>
+                    Cancle
+                  </Button>
+                </Modal>
+              </Portal>
+              <Portal>
+                <Modal visible={editModal} contentContainerStyle={styles.modal} onDismiss={() => setEditModal(false)}>
+                  <Text>Enter the new Email:{item.email}</Text>
+                  <TextInput
+                    label="Email"
+                    value={editText}
+                    onChangeText={editText => setEditText(editText)}
+                  />
+                  <Button mode='outlined' onPress={() => {onEdit(item); setEditModal(false)}}>
+                    Save
+                  </Button>
+                  <Button mode='outlined' onPress={() => setEditModal(false)}>
+                    Cancle
+                  </Button>
+                </Modal>
+              </Portal>
+            </View>
           );
         }}
       />
@@ -310,8 +342,15 @@ function Admins(props: AdminProps): React.ReactElement {
         onPress={() => setVisible(!visible)}
       />
       <Portal>
-        <Modal visible={visible} contentContainerStyle={styles.inviteModal}>
-          <Text>Example Modal. Click outside this area to dismiss.</Text>
+        <Modal visible={visible} contentContainerStyle={styles.modal} onDismiss={() => setVisible(false)}>
+          <TextInput
+            label="Email"
+            value={inviteText}
+            onChangeText={inviteText => setInviteText(inviteText)}
+          />
+          <Button mode='outlined' onPress={() => {/*onInvite(); */setVisible(false)}}>
+            Send Invite
+          </Button>
         </Modal>
       </Portal>
     </SafeAreaView>
