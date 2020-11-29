@@ -38,23 +38,21 @@ function Admins(props: AdminProps): React.ReactElement {
   const [editModal, setEditModal] = React.useState(false);
   const [editName, setEditName] = React.useState("");
   const [editEmail, setEditEmail] = React.useState("");
+  const [selectedItem, setSelectedItem] = React.useState(admins[0]);
 
-  const onDelete = async (email: string) => {
+  const onDelete = async () => {
     try {
-      await Admin.delete(email, token);
+      await Admin.delete(selectedItem.email, token);
     } catch {
       // show error message
     }
     onRefresh();
   };
 
-  const onEdit = (user: {
-    email: string;
-    name: string;
-    superUser: boolean;
-  }) => {
+  const onEdit = () => {
     //TODO: update Admin.update() perams
     //    Doesn't send any requests
+    //    Use selectedItem to get user info
     try {
       //Admin.update(editName, editEmail, props.token)
       onRefresh();
@@ -68,7 +66,10 @@ function Admins(props: AdminProps): React.ReactElement {
       return (
         <IconButton
           icon="delete"
-          onPress={() => setDeleteModal(!deleteModal)}
+          onPress={() => {
+            setDeleteModal(!deleteModal);
+            setSelectedItem(item)
+          }}
         />
       );
   };
@@ -91,7 +92,10 @@ function Admins(props: AdminProps): React.ReactElement {
                   <View style={{ flexDirection: "row" }}>
                     <IconButton
                       icon="pencil"
-                      onPress={() => setEditModal(!editModal)}
+                      onPress={() => {
+                        setEditModal(!editModal);
+                        setSelectedItem(item);
+                      }}
                     />
                     {superUserDeleteCheck(item)}
                   </View>
@@ -106,16 +110,16 @@ function Admins(props: AdminProps): React.ReactElement {
                 }
                 onDismiss={() => setDeleteModal(false)}
               >
-                <Text>Are you sure you want to delete {item.email}?</Text>
+                <Text>Are you sure you want to delete {selectedItem.email}?</Text>
                 {/* TODO: Currently opens modal for every item. Very bad*/}
                 <Button
                   mode="contained"
                   onPress={() => {
-                    onDelete(item.email);
+                    onDelete();
                     setDeleteModal(false);
                   }}
                 >
-                  Delete {item.email}
+                  Delete {selectedItem.email}
                 </Button>
 
                 <Button mode="contained" onPress={() => setDeleteModal(false)}>
@@ -133,13 +137,13 @@ function Admins(props: AdminProps): React.ReactElement {
               >
                 {" "}
                 {/* TODO: Currently opens modal for every item. Very bad*/}
-                <Text>Enter the new name for {item.name}:</Text>
+                <Text>Enter the new name for {selectedItem.name}:</Text>
                 <TextInput
                   label="Name"
                   value={editName}
                   onChangeText={(newName) => setEditName(newName)}
                 />
-                <Text>Enter the new Email for {item.email}:</Text>
+                <Text>Enter the new Email for {selectedItem.email}:</Text>
                 <TextInput
                   label="Email"
                   value={editEmail}
@@ -148,7 +152,7 @@ function Admins(props: AdminProps): React.ReactElement {
                 <Button
                   mode="contained"
                   onPress={() => {
-                    onEdit(item);
+                    onEdit();
                     setEditModal(false);
                   }}
                 >
