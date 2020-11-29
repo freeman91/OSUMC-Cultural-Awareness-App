@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FlatList, Alert, View, Platform } from "react-native";
-
+import { connect } from "react-redux";
 import {
   List,
   IconButton,
@@ -12,8 +12,8 @@ import {
   FAB,
 } from "react-native-paper";
 
+import { Store } from "../../redux";
 import { Admin } from "../../lib";
-
 import styles from "./styles";
 
 /**
@@ -22,7 +22,7 @@ import styles from "./styles";
 type AdminProps = {
   token: string;
   admins: Admin[];
-  // Refresh admins
+  theme: string;
   onRefresh: () => void;
 };
 
@@ -32,9 +32,8 @@ type AdminProps = {
  * @param {AdminProps} props
  * @returns {React.ReactElement} React component
  */
-export default function Admins(props: AdminProps): React.ReactElement {
-  const { token, admins, onRefresh } = props;
-  const [users, setUsers] = useState(null);
+function Admins(props: AdminProps): React.ReactElement {
+  const { theme, token, admins, onRefresh } = props;
   const [visible, setVisible] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
@@ -98,6 +97,8 @@ export default function Admins(props: AdminProps): React.ReactElement {
   //     <ActivityIndicator animating={true} size="large" style={styles.spinner} />
   //   );
   // }
+
+  console.log(theme)
 
   return (
     <View>
@@ -199,3 +200,13 @@ export default function Admins(props: AdminProps): React.ReactElement {
     </View>
   );
 }
+
+ 
+export default connect(
+  (
+    state: Store,
+  ) => ({
+    theme: state.theme,
+  }),
+  null
+)(Admins);
