@@ -24,7 +24,7 @@ import { Routes } from "../../routes";
 import Cultures from "./Cultures";
 import Admins from "./Admins";
 import styles from "./styles";
-import InviteFAB from "./InviteFAB"
+import InviteFAB from "./InviteFAB";
 
 type Props = {
   navigation: StackNavigationProp<Routes, "Home">;
@@ -156,7 +156,11 @@ function Home(props: Props): React.ReactElement {
       <Portal>
         <Modal
           visible={inviteModal}
-          contentContainerStyle={theme === 'Dark' ? styles.modalDark : styles.modalLight /*doesn't know what theme is active*/}
+          contentContainerStyle={
+            theme === "Dark"
+              ? styles.modalDark
+              : styles.modalLight /*doesn't know what theme is active*/
+          }
           onDismiss={() => setInviteModal(false)}
         >
           <TextInput
@@ -167,7 +171,7 @@ function Home(props: Props): React.ReactElement {
           <Button
             mode="contained"
             onPress={() => {
-              onInvite(inviteText);  
+              onInvite(inviteText);
               setInviteModal(false);
             }}
           >

@@ -12,8 +12,8 @@ import { accessibilityProps } from "react-native-paper/lib/typescript/src/compon
  * Properties for {@link ToolsFAB}
  */
 type InviteFABProps = {
-    onPress: () => void;
-  };
+  onPress: () => void;
+};
 
 /**
  * ToolsFAB displays a {@link FAB.Group} that has two sub {@link FAB} one for editing and one for saving.
@@ -42,10 +42,6 @@ export default function ToolsFAB(props: InviteFABProps): React.ReactElement {
   }
 
   return (
-    <FAB
-      style={styles as any}
-      icon="plus"
-      onPress={() => props.onPress()}
-    />
+    <FAB style={styles as any} icon="plus" onPress={() => props.onPress()} />
   );
 }

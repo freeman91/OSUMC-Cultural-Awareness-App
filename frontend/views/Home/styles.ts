@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { darkTheme, lightTheme } from "../../theme"
+import { darkTheme, lightTheme } from "../../theme";
 
 export default StyleSheet.create({
   spinner: { top: "50%", position: "relative" },

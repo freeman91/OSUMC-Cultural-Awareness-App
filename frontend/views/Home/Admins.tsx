@@ -73,7 +73,7 @@ function Admins(props: AdminProps): React.ReactElement {
       );
   };
 
-  console.log(theme)
+  console.log(theme);
 
   return (
     <FlatList
@@ -101,17 +101,19 @@ function Admins(props: AdminProps): React.ReactElement {
             <Portal>
               <Modal
                 visible={deleteModal}
-                contentContainerStyle={theme === 'Dark' ? styles.modalDark : styles.modalLight}
+                contentContainerStyle={
+                  theme === "Dark" ? styles.modalDark : styles.modalLight
+                }
                 onDismiss={() => setDeleteModal(false)}
               >
                 <Text>Are you sure you want to delete {item.email}?</Text>
-            {/* TODO: Currently opens modal for every item. Very bad*/}
+                {/* TODO: Currently opens modal for every item. Very bad*/}
                 <Button
                   mode="contained"
                   onPress={() => {
-                      onDelete(item.email); 
-                      setDeleteModal(false)}
-                  }
+                    onDelete(item.email);
+                    setDeleteModal(false);
+                  }}
                 >
                   Delete {item.email}
                 </Button>
@@ -124,9 +126,13 @@ function Admins(props: AdminProps): React.ReactElement {
             <Portal>
               <Modal
                 visible={editModal}
-                contentContainerStyle={theme === 'Dark' ? styles.modalDark : styles.modalLight}
+                contentContainerStyle={
+                  theme === "Dark" ? styles.modalDark : styles.modalLight
+                }
                 onDismiss={() => setEditModal(false)}
-              > {/* TODO: Currently opens modal for every item. Very bad*/}
+              >
+                {" "}
+                {/* TODO: Currently opens modal for every item. Very bad*/}
                 <Text>Enter the new name for {item.name}:</Text>
                 <TextInput
                   label="Name"
@@ -160,11 +166,8 @@ function Admins(props: AdminProps): React.ReactElement {
   );
 }
 
- 
 export default connect(
-  (
-    state: Store,
-  ) => ({
+  (state: Store) => ({
     theme: state.theme,
   }),
   null
