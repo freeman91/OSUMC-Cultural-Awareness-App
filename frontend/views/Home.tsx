@@ -28,6 +28,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Routes } from "../routes";
 import { Store } from "../redux/UserReducer";
 import { Admin, Culture } from "../api";
+import { Item } from "react-native-paper/lib/typescript/src/components/List/List";
 
 const styles = StyleSheet.create({
   spinner: { top: "50%", position: "relative" },
@@ -226,8 +227,8 @@ function Admins(props: AdminProps): React.ReactElement {
   const [visible, setVisible] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
-  const [editText, setEditText] = React.useState('');
-  const [inviteText, setInviteText] = React.useState('');
+  const [editText, setEditText] = React.useState("");
+  const [inviteText, setInviteText] = React.useState("");
   useEffect(() => {
     fetchAdminData();
   }, []);
@@ -274,6 +275,16 @@ function Admins(props: AdminProps): React.ReactElement {
     }
   };
 
+  const superUserDeleteCheck = (item: any) => {
+    if (!item.superUser)
+      return (
+        <IconButton
+          icon="delete"
+          onPress={() => setDeleteModal(!deleteModal)}
+        />
+      );
+  };
+
   if (!users) {
     return (
       <ActivityIndicator animating={true} size="large" style={styles.spinner} />
@@ -295,39 +306,54 @@ function Admins(props: AdminProps): React.ReactElement {
                 right={() =>
                   props.token !== "" && (
                     <View style={{ flexDirection: "row" }}>
-                      <IconButton icon="pencil" onPress={() => setEditModal(!editModal)} />
                       <IconButton
-                        icon="delete"
-                        onPress={() => setDeleteModal(!deleteModal)}
+                        icon="pencil"
+                        onPress={() => setEditModal(!editModal)}
                       />
+                      {superUserDeleteCheck(item)}
                     </View>
                   )
                 }
               />
               <Portal>
-                <Modal visible={deleteModal} contentContainerStyle={styles.modal} onDismiss={() => setDeleteModal(false)}>
+                <Modal
+                  visible={deleteModal}
+                  contentContainerStyle={styles.modal}
+                  onDismiss={() => setDeleteModal(false)}
+                >
                   <Text>Are you sure you want to delete {item.email}</Text>
                   <IconButton
                     icon="delete"
                     onPress={() => onDelete(item.email)}
                   />
-                  <Button mode='outlined' onPress={() => setDeleteModal(false)}>
+
+                  <Button mode="outlined" onPress={() => setDeleteModal(false)}>
                     Cancle
                   </Button>
                 </Modal>
               </Portal>
               <Portal>
-                <Modal visible={editModal} contentContainerStyle={styles.modal} onDismiss={() => setEditModal(false)}>
+                <Modal
+                  visible={editModal}
+                  contentContainerStyle={styles.modal}
+                  onDismiss={() => setEditModal(false)}
+                >
                   <Text>Enter the new Email:{item.email}</Text>
                   <TextInput
                     label="Email"
                     value={editText}
-                    onChangeText={editText => setEditText(editText)}
+                    onChangeText={(editText) => setEditText(editText)}
                   />
-                  <Button mode='outlined' onPress={() => {onEdit(item); setEditModal(false)}}>
+                  <Button
+                    mode="outlined"
+                    onPress={() => {
+                      onEdit(item);
+                      setEditModal(false);
+                    }}
+                  >
                     Save
                   </Button>
-                  <Button mode='outlined' onPress={() => setEditModal(false)}>
+                  <Button mode="outlined" onPress={() => setEditModal(false)}>
                     Cancle
                   </Button>
                 </Modal>
@@ -342,13 +368,22 @@ function Admins(props: AdminProps): React.ReactElement {
         onPress={() => setVisible(!visible)}
       />
       <Portal>
-        <Modal visible={visible} contentContainerStyle={styles.modal} onDismiss={() => setVisible(false)}>
+        <Modal
+          visible={visible}
+          contentContainerStyle={styles.modal}
+          onDismiss={() => setVisible(false)}
+        >
           <TextInput
             label="Email"
             value={inviteText}
-            onChangeText={inviteText => setInviteText(inviteText)}
+            onChangeText={(inviteText) => setInviteText(inviteText)}
           />
-          <Button mode='outlined' onPress={() => {/*onInvite(); */setVisible(false)}}>
+          <Button
+            mode="outlined"
+            onPress={() => {
+              /*onInvite(); */ setVisible(false);
+            }}
+          >
             Send Invite
           </Button>
         </Modal>
