@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1,
   },
 
-  inviteModal: {
+  modal: {
     padding: 20,
     backgroundColor: "white",
   },
