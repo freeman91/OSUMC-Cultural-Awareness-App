@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Platform, useWindowDimensions } from "react-native";
 
 import { connect } from "react-redux";
@@ -15,7 +15,9 @@ import {
   ActivityIndicator,
   TextInput,
   Button,
+  HelperText,
 } from "react-native-paper";
+import { useFormik } from "formik";
 
 import { Store } from "../../redux";
 import { Admin, Culture } from "../../lib";
@@ -25,6 +27,7 @@ import Cultures from "./Cultures";
 import Admins from "./Admins";
 import styles from "./styles";
 import InviteFAB from "./InviteFAB";
+import Validation from "./validation";
 
 type Props = {
   navigation: StackNavigationProp<Routes, "Home">;
@@ -39,6 +42,21 @@ type TabProps = {
   Admins: { admins: Admin[] };
 };
 
+/**
+ * Invite Email screen fields for Formik.
+ */
+type EmailField = {
+  email: string;
+};
+
+/**
+ * Initial values for Login fields for Formik.
+ */
+const initialValues: EmailField = {
+  // This field could be updated with useEffect to enter the user's saved email address.
+  email: "",
+};
+
 const Tab = createMaterialTopTabNavigator<TabProps>();
 
 function Home(props: Props): React.ReactElement {
@@ -47,7 +65,24 @@ function Home(props: Props): React.ReactElement {
   const [cultures, setCultures] = useState(null);
   const [admins, setAdmins] = useState(null);
   const [inviteModal, setInviteModal] = React.useState(false);
-  const [inviteText, setInviteText] = React.useState("");
+
+  const email = useRef();
+
+  const {
+    values,
+    handleChange,
+    handleBlur,
+    errors,
+    touched,
+    handleSubmit,
+    setFieldValue,
+    validateField,
+  } = useFormik({
+    validationSchema: Validation,
+    initialValues: initialValues,
+    onSubmit: (values) => invite(values),
+  });
+
   const window = useWindowDimensions();
   const safeArea = useSafeAreaInsets();
 
@@ -97,9 +132,12 @@ function Home(props: Props): React.ReactElement {
     }
   };
 
-  const onInvite = async (email: string) => {
+  const invite = async (field: EmailField) => {
+    const { email } = field;
+    await validateField("email");
     try {
       await Admin.invite(email, token);
+      setInviteModal(false);
     } catch (err) {
       // show error message
     }
@@ -163,22 +201,26 @@ function Home(props: Props): React.ReactElement {
           }
           onDismiss={() => setInviteModal(false)}
         >
+          {/* update style for text */}
+          <Text>Invite a new admin</Text>
           <TextInput
-            label="Email"
-            value={inviteText}
-            onChangeText={(inviteText) => setInviteText(inviteText)}
+            autoFocus={true}
+            textContentType="emailAddress"
+            mode="outlined"
+            left={<TextInput.Icon name="email" />}
+            error={errors.email && touched.email}
+            label="email"
+            value={values.email}
+            ref={email}
+            onBlur={handleBlur("email")}
+            onChangeText={handleChange("email")}
           />
-          <Button
-            mode="contained"
-            onPress={() => {
-              onInvite(inviteText);
-              setInviteModal(false);
-            }}
-          >
+          {errors.email && touched.email && (
+            <HelperText type="error">{errors.email}</HelperText>
+          )}
+          <div style={{ margin: "5px" }} />
+          <Button mode="contained" onPress={handleSubmit}>
             Send Invite
-          </Button>
-          <Button mode="contained" onPress={() => setInviteModal(false)}>
-            Cancel
           </Button>
         </Modal>
       </Portal>
@@ -204,6 +246,7 @@ export default connect(
     route: ownProps.route,
     user: state.user.user,
     token: state.user.token,
+    theme: state.theme,
   }),
   null
 )(Home);
