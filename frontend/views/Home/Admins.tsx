@@ -43,6 +43,7 @@ type AdminProps = {
   token: string;
   admins: Admin[];
   theme: string;
+  user: Admin;
   onRefresh: () => void;
 };
 
