@@ -132,19 +132,10 @@ class AdminUpdateSchema(Schema):
 
     Format:
     {
-      "email": "test@gmail.com",
       "name": "name",
-      "password": "password",
-      "password_confirmation": "password",
-      "superUser": true,
     }
     """
-
-    email = fields.Email(required=True)
     name = fields.String()
-    password = fields.String()
-    password_confirmation = fields.String()
-    superUser = fields.Boolean()
 
 
 def validate_request_body(schema, body: Dict) -> Union[str, Dict[str, Any]]:
