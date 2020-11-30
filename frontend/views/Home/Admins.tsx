@@ -68,7 +68,7 @@ function Admins(props: AdminProps): React.ReactElement {
           icon="delete"
           onPress={() => {
             setDeleteModal(!deleteModal);
-            setSelectedItem(item)
+            setSelectedItem(item);
           }}
         />
       );
@@ -110,7 +110,10 @@ function Admins(props: AdminProps): React.ReactElement {
                 }
                 onDismiss={() => setDeleteModal(false)}
               >
-                <Text>Are you sure you want to delete {selectedItem.email}?</Text>
+                <Text>
+                  Are you sure you want to remove {selectedItem.email} as an
+                  admin?
+                </Text>
                 <Button
                   mode="contained"
                   onPress={() => {
@@ -119,10 +122,6 @@ function Admins(props: AdminProps): React.ReactElement {
                   }}
                 >
                   Delete {selectedItem.email}
-                </Button>
-
-                <Button mode="contained" onPress={() => setDeleteModal(false)}>
-                  Cancel
                 </Button>
               </Modal>
             </Portal>
@@ -134,16 +133,15 @@ function Admins(props: AdminProps): React.ReactElement {
                 }
                 onDismiss={() => setEditModal(false)}
               >
-                <Text>Enter the new name for {selectedItem.name}:</Text>
                 <TextInput
                   label="Name"
-                  value={editName}
+                  value={selectedItem.name}
                   onChangeText={(newName) => setEditName(newName)}
                 />
-                <Text>Enter the new Email for {selectedItem.email}:</Text>
                 <TextInput
+                  disabled={true}
                   label="Email"
-                  value={editEmail}
+                  value={selectedItem.email}
                   onChangeText={(newEmail) => setEditEmail(newEmail)}
                 />
                 <Button
@@ -154,9 +152,6 @@ function Admins(props: AdminProps): React.ReactElement {
                   }}
                 >
                   Save
-                </Button>
-                <Button mode="contained" onPress={() => setEditModal(false)}>
-                  Cancel
                 </Button>
               </Modal>
             </Portal>
