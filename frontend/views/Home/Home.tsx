@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Platform, useWindowDimensions } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 
 import { connect } from "react-redux";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -8,14 +8,14 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
-  FAB,
+  // FAB,
   Portal,
   Modal,
   Text,
   ActivityIndicator,
   TextInput,
   Button,
-  HelperText,
+  // HelperText,
 } from "react-native-paper";
 import { useFormik } from "formik";
 
@@ -27,7 +27,7 @@ import Cultures from "./Cultures";
 import Admins from "./Admins";
 import styles from "./styles";
 import InviteFAB from "./InviteFAB";
-import Validation from "./validation";
+import { EmailValidation } from "./validation";
 
 type Props = {
   navigation: StackNavigationProp<Routes, "Home">;
@@ -50,7 +50,7 @@ type EmailField = {
 };
 
 /**
- * Initial values for Login fields for Formik.
+ * Initial values for email field for Formik.
  */
 const initialValues: EmailField = {
   // This field could be updated with useEffect to enter the user's saved email address.
@@ -75,10 +75,9 @@ function Home(props: Props): React.ReactElement {
     errors,
     touched,
     handleSubmit,
-    setFieldValue,
     validateField,
   } = useFormik({
-    validationSchema: Validation,
+    validationSchema: EmailValidation,
     initialValues: initialValues,
     onSubmit: (values) => invite(values),
   });
@@ -215,21 +214,13 @@ function Home(props: Props): React.ReactElement {
             onBlur={handleBlur("email")}
             onChangeText={handleChange("email")}
           />
-          {errors.email && touched.email && (
-            <HelperText type="error">{errors.email}</HelperText>
-          )}
           <div style={{ margin: "5px" }} />
           <Button mode="contained" onPress={handleSubmit}>
             Send Invite
           </Button>
         </Modal>
       </Portal>
-      {/*<FAB icon="plus" style={fabStyles as any} onPress={onAdd} />
-      <Portal>
-        <Modal visible={inviteModal} onDismiss={() => setInviteModal(false)}>
-          <Text>Example Modal. Click outside this area to dismiss.</Text>
-        </Modal>
-          </Portal> */}
+      {/*<FAB icon="plus" style={fabStyles as any} onPress={onAdd} />*/}
     </View>
   );
 }

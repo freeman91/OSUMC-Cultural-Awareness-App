@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { FlatList, Alert, View, Platform } from "react-native";
 import { connect } from "react-redux";
 import {
@@ -9,12 +9,32 @@ import {
   Text,
   Button,
   TextInput,
-  FAB,
+  // FAB,
+  // HelperText,
 } from "react-native-paper";
+import { useFormik } from "formik";
 
 import { Store } from "../../redux";
 import { Admin } from "../../lib";
 import styles from "./styles";
+import { EmailNameValidation } from "./validation";
+
+/**
+ * Invite Email screen fields for Formik.
+ */
+type EditFields = {
+  email: string;
+  name: string;
+};
+
+/**
+ * Initial values for email field for Formik.
+ */
+const initialValues: EditFields = {
+  // This field could be updated with useEffect to enter the user's saved email address.
+  email: "",
+  name: "",
+};
 
 /**
  * Properties for {@link Admins}
@@ -33,12 +53,27 @@ type AdminProps = {
  * @returns {React.ReactElement} React component
  */
 function Admins(props: AdminProps): React.ReactElement {
-  const { theme, token, admins, onRefresh } = props;
-  const [deleteModal, setDeleteModal] = React.useState(false);
-  const [editModal, setEditModal] = React.useState(false);
-  const [editName, setEditName] = React.useState("");
-  const [editEmail, setEditEmail] = React.useState("");
-  const [selectedItem, setSelectedItem] = React.useState(admins[0]);
+  const { user, theme, token, admins, onRefresh } = props;
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(admins[0]);
+
+  const name = useRef();
+
+  const {
+    values,
+    handleChange,
+    handleBlur,
+    errors,
+    touched,
+    handleSubmit,
+    validateField,
+    setFieldValue,
+  } = useFormik({
+    validationSchema: EmailNameValidation,
+    initialValues: initialValues,
+    onSubmit: (values) => onEdit(values),
+  });
 
   const onDelete = async () => {
     try {
@@ -49,20 +84,19 @@ function Admins(props: AdminProps): React.ReactElement {
     onRefresh();
   };
 
-  const onEdit = () => {
-    //TODO: update Admin.update() perams
-    //    Doesn't send any requests
-    //    Use selectedItem to get user info
+  const onEdit = async (fields: EditFields) => {
+    const { name, email } = fields
     try {
-      //Admin.update(editName, editEmail, props.token)
+      Admin.update(email, name, props.token)
+      setEditModal(false)
       onRefresh();
     } catch {
-      // show error message
+      // TODO: show error message
     }
   };
 
   const superUserDeleteCheck = (item: any) => {
-    if (!item.superUser)
+    if (!item.superUser && item.email != user.email)
       return (
         <IconButton
           icon="delete"
@@ -74,7 +108,11 @@ function Admins(props: AdminProps): React.ReactElement {
       );
   };
 
-  console.log(theme);
+  const handleEditClick = (admin: Admin) => {
+    setFieldValue("name", admin.name);
+    setFieldValue("email", admin.email);
+    setEditModal(!editModal);
+  }
 
   return (
     <FlatList
@@ -92,10 +130,7 @@ function Admins(props: AdminProps): React.ReactElement {
                   <View style={{ flexDirection: "row" }}>
                     <IconButton
                       icon="pencil"
-                      onPress={() => {
-                        setEditModal(!editModal);
-                        setSelectedItem(item);
-                      }}
+                      onPress={() => handleEditClick(item)}
                     />
                     {superUserDeleteCheck(item)}
                   </View>
@@ -110,9 +145,9 @@ function Admins(props: AdminProps): React.ReactElement {
                 }
                 onDismiss={() => setDeleteModal(false)}
               >
+                {/*TODO: update style for text */}
                 <Text>
-                  Are you sure you want to remove {selectedItem.email} as an
-                  admin?
+                  Are you sure you want to delete {selectedItem.email}?
                 </Text>
                 <Button
                   mode="contained"
@@ -120,8 +155,9 @@ function Admins(props: AdminProps): React.ReactElement {
                     onDelete();
                     setDeleteModal(false);
                   }}
+                  style={{ backgroundColor: "red" }}
                 >
-                  Delete {selectedItem.email}
+                  Delete
                 </Button>
               </Modal>
             </Portal>
@@ -133,24 +169,29 @@ function Admins(props: AdminProps): React.ReactElement {
                 }
                 onDismiss={() => setEditModal(false)}
               >
+                {/*TODO: update style for text */}
+                <Text>Edit admin Account</Text>
                 <TextInput
-                  label="Name"
-                  value={selectedItem.name}
-                  onChangeText={(newName) => setEditName(newName)}
-                />
-                <TextInput
+                  mode="outlined"
+                  left={<TextInput.Icon name="email" />}
+                  label="email"
+                  value={values.email}
                   disabled={true}
-                  label="Email"
-                  value={selectedItem.email}
-                  onChangeText={(newEmail) => setEditEmail(newEmail)}
                 />
-                <Button
-                  mode="contained"
-                  onPress={() => {
-                    onEdit();
-                    setEditModal(false);
-                  }}
-                >
+                <TextInput
+                  autoFocus={true}
+                  textContentType="name"
+                  mode="outlined"
+                  left={<TextInput.Icon name="account-badge" />}
+                  error={errors.name && touched.name}
+                  label="name"
+                  value={values.name}
+                  ref={name}
+                  onBlur={handleBlur("name")}
+                  onChangeText={handleChange("name")}
+                />
+                <div style={{ margin: "5px" }} />
+                <Button mode="contained" onPress={handleSubmit}>
                   Save
                 </Button>
               </Modal>
@@ -164,6 +205,7 @@ function Admins(props: AdminProps): React.ReactElement {
 
 export default connect(
   (state: Store) => ({
+    user: state.user.user,
     theme: state.theme,
   }),
   null
