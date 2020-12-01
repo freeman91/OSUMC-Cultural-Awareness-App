@@ -32,4 +32,8 @@ export default StyleSheet.create({
   div: {
     margin: "5px",
   },
+
+  deleteButton: {
+    backgroundColor: "red",
+  },
 });

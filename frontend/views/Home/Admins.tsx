@@ -9,6 +9,7 @@ import {
   Text,
   Button,
   TextInput,
+  Snackbar,
 } from "react-native-paper";
 import { useFormik } from "formik";
 
@@ -56,6 +57,7 @@ function Admins(props: AdminProps): React.ReactElement {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [msg, setMsg] = useState<string>("");
 
   const name = useRef();
 
@@ -73,6 +75,8 @@ function Admins(props: AdminProps): React.ReactElement {
     initialValues: initialValues,
     onSubmit: (values) => onEdit(values),
   });
+
+  const hideSnackbar = () => setMsg("");
 
   const onDelete = async () => {
     try {
@@ -155,7 +159,7 @@ function Admins(props: AdminProps): React.ReactElement {
                       onDelete();
                       setDeleteModal(false);
                     }}
-                    style={{ backgroundColor: "red" }}
+                    style={styles.deleteButton}
                   >
                     Delete
                   </Button>
@@ -192,12 +196,24 @@ function Admins(props: AdminProps): React.ReactElement {
                     onBlur={handleBlur("name")}
                     onChangeText={handleChange("name")}
                   />
-                  <div style={{ margin: "5px" }} />
+                  <View style={styles.div} />
                   <Button mode="contained" onPress={handleSubmit}>
                     Save
                   </Button>
                 </Modal>
               )}
+            </Portal>
+            <Portal>
+              <Snackbar
+                visible={msg !== ""}
+                onDismiss={hideSnackbar}
+                action={{
+                  label: "Ok",
+                  onPress: hideSnackbar,
+                }}
+              >
+                {msg}
+              </Snackbar>
             </Portal>
           </View>
         );

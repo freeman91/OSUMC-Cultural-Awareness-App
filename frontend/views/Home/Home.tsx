@@ -15,6 +15,7 @@ import {
   TextInput,
   Button,
   FAB,
+  Snackbar,
 } from "react-native-paper";
 import { useFormik } from "formik";
 
@@ -25,7 +26,6 @@ import { Routes } from "../../routes";
 import Cultures from "./Cultures";
 import Admins from "./Admins";
 import styles from "./styles";
-import InviteFAB from "./InviteFAB";
 import { EmailValidation } from "./validation";
 
 type Props = {
@@ -64,6 +64,7 @@ function Home(props: Props): React.ReactElement {
   const [cultures, setCultures] = useState(null);
   const [admins, setAdmins] = useState(null);
   const [inviteModal, setInviteModal] = React.useState(false);
+  const [msg, setMsg] = useState<string>("");
 
   const email = useRef();
 
@@ -137,9 +138,11 @@ function Home(props: Props): React.ReactElement {
       await Admin.invite(email, token);
       setInviteModal(false);
     } catch (err) {
-      // show error message
+      setMsg(err.toString());
     }
   };
+
+  const hideSnackbar = () => setMsg("");
 
   //Sets position of the FAB depending on the platform
   let styleFAB = {
@@ -209,6 +212,18 @@ function Home(props: Props): React.ReactElement {
             Send Invite
           </Button>
         </Modal>
+      </Portal>
+      <Portal>
+        <Snackbar
+          visible={msg !== ""}
+          onDismiss={hideSnackbar}
+          action={{
+            label: "Ok",
+            onPress: hideSnackbar,
+          }}
+        >
+          {msg}
+        </Snackbar>
       </Portal>
     </View>
   );
