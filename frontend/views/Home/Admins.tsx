@@ -127,7 +127,6 @@ function Admins(props: AdminProps): React.ReactElement {
           <View>
             <List.Item
               title={item.email}
-              onPress={() => {}}
               right={() =>
                 props.token !== "" && (
                   <View style={{ flexDirection: "row" }}>
