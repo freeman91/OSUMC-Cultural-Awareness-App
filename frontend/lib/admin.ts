@@ -123,7 +123,6 @@ export class Admin {
     await Api.put(
       `/admins/${email}`,
       {
-        email: email,
         password: password,
         password_confirmation: passwordConfirmation,
       },

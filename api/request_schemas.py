@@ -133,9 +133,13 @@ class AdminUpdateSchema(Schema):
     Format:
     {
       "name": "name",
+      "password": "password",
+      "password_confirmation": "password",
     }
     """
     name = fields.String()
+    password = fields.String()
+    password_confirmation = fields.String()
 
 
 def validate_request_body(schema, body: Dict) -> Union[str, Dict[str, Any]]:
