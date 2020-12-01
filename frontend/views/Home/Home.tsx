@@ -8,14 +8,12 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
-  // FAB,
   Portal,
   Modal,
   Text,
   ActivityIndicator,
   TextInput,
   Button,
-  // HelperText,
 } from "react-native-paper";
 import { useFormik } from "formik";
 
@@ -148,24 +146,8 @@ function Home(props: Props): React.ReactElement {
     );
   }
 
-  // HACK: In order to get the FAB to be positioned properly on both Web and Mobile.
-  //
-  // Web: use position: fixed.
-  // Mobile: useWindowDimensions hook, this doesn't work on Web.
-  // const fabStyles = {
-  //   margin: 16,
-  //   right: 0,
-  //   position: Platform.OS === "web" ? "fixed" : "absolute",
-  // };
-
-  // if (Platform.OS !== "web") {
-  //   fabStyles["top"] = window.height - safeArea.bottom;
-  // } else {
-  //   fabStyles["bottom"] = 0;
-  // }
-
   return (
-    <View>
+    <View style={styles.view}>
       <Tab.Navigator initialRouteName="Cultures">
         <Tab.Screen name="Cultures">
           {() => (
@@ -187,16 +169,12 @@ function Home(props: Props): React.ReactElement {
           )}
         </Tab.Screen>
       </Tab.Navigator>
-      <InviteFAB // TODO: make visible only on admins tab. Check what tab is selected?; Get theme to work correctly.
-        onPress={() => setInviteModal(!inviteModal)}
-      />
+      <InviteFAB onPress={() => onAdd()} />
       <Portal>
         <Modal
           visible={inviteModal}
           contentContainerStyle={
-            theme === "Dark"
-              ? styles.modalDark
-              : styles.modalLight /*doesn't know what theme is active*/
+            theme === "Dark" ? styles.modalDark : styles.modalLight
           }
           onDismiss={() => setInviteModal(false)}
         >
@@ -220,7 +198,6 @@ function Home(props: Props): React.ReactElement {
           </Button>
         </Modal>
       </Portal>
-      {/*<FAB icon="plus" style={fabStyles as any} onPress={onAdd} />*/}
     </View>
   );
 }

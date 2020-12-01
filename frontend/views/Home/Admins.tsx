@@ -9,8 +9,6 @@ import {
   Text,
   Button,
   TextInput,
-  // FAB,
-  // HelperText,
 } from "react-native-paper";
 import { useFormik } from "formik";
 
@@ -43,6 +41,7 @@ type AdminProps = {
   token: string;
   admins: Admin[];
   theme: string;
+  user: Admin;
   onRefresh: () => void;
 };
 
@@ -56,7 +55,7 @@ function Admins(props: AdminProps): React.ReactElement {
   const { user, theme, token, admins, onRefresh } = props;
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(admins[0]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const name = useRef();
 
@@ -85,10 +84,10 @@ function Admins(props: AdminProps): React.ReactElement {
   };
 
   const onEdit = async (fields: EditFields) => {
-    const { name, email } = fields
+    const { name, email } = fields;
     try {
-      Admin.update(email, name, props.token)
-      setEditModal(false)
+      Admin.update(email, name, props.token);
+      setEditModal(false);
       onRefresh();
     } catch {
       // TODO: show error message
@@ -101,7 +100,7 @@ function Admins(props: AdminProps): React.ReactElement {
         <IconButton
           icon="delete"
           onPress={() => {
-            setDeleteModal(!deleteModal);
+            setDeleteModal(true);
             setSelectedItem(item);
           }}
         />
@@ -111,8 +110,8 @@ function Admins(props: AdminProps): React.ReactElement {
   const handleEditClick = (admin: Admin) => {
     setFieldValue("name", admin.name);
     setFieldValue("email", admin.email);
-    setEditModal(!editModal);
-  }
+    setEditModal(true);
+  };
 
   return (
     <FlatList
@@ -138,63 +137,67 @@ function Admins(props: AdminProps): React.ReactElement {
               }
             />
             <Portal>
-              <Modal
-                visible={deleteModal}
-                contentContainerStyle={
-                  theme === "Dark" ? styles.modalDark : styles.modalLight
-                }
-                onDismiss={() => setDeleteModal(false)}
-              >
-                {/*TODO: update style for text */}
-                <Text>
-                  Are you sure you want to delete {selectedItem.email}?
-                </Text>
-                <Button
-                  mode="contained"
-                  onPress={() => {
-                    onDelete();
-                    setDeleteModal(false);
-                  }}
-                  style={{ backgroundColor: "red" }}
+              {deleteModal && (
+                <Modal
+                  visible={deleteModal}
+                  contentContainerStyle={
+                    theme === "Dark" ? styles.modalDark : styles.modalLight
+                  }
+                  onDismiss={() => setDeleteModal(false)}
                 >
-                  Delete
-                </Button>
-              </Modal>
+                  {/*TODO: update style for text */}
+                  <Text>
+                    Are you sure you want to delete {selectedItem.email}?
+                  </Text>
+                  <Button
+                    mode="contained"
+                    onPress={() => {
+                      onDelete();
+                      setDeleteModal(false);
+                    }}
+                    style={{ backgroundColor: "red" }}
+                  >
+                    Delete
+                  </Button>
+                </Modal>
+              )}
             </Portal>
             <Portal>
-              <Modal
-                visible={editModal}
-                contentContainerStyle={
-                  theme === "Dark" ? styles.modalDark : styles.modalLight
-                }
-                onDismiss={() => setEditModal(false)}
-              >
-                {/*TODO: update style for text */}
-                <Text>Edit admin Account</Text>
-                <TextInput
-                  mode="outlined"
-                  left={<TextInput.Icon name="email" />}
-                  label="email"
-                  value={values.email}
-                  disabled={true}
-                />
-                <TextInput
-                  autoFocus={true}
-                  textContentType="name"
-                  mode="outlined"
-                  left={<TextInput.Icon name="account-badge" />}
-                  error={errors.name && touched.name}
-                  label="name"
-                  value={values.name}
-                  ref={name}
-                  onBlur={handleBlur("name")}
-                  onChangeText={handleChange("name")}
-                />
-                <div style={{ margin: "5px" }} />
-                <Button mode="contained" onPress={handleSubmit}>
-                  Save
-                </Button>
-              </Modal>
+              {editModal && (
+                <Modal
+                  visible={editModal}
+                  contentContainerStyle={
+                    theme === "Dark" ? styles.modalDark : styles.modalLight
+                  }
+                  onDismiss={() => setEditModal(false)}
+                >
+                  {/*TODO: update style for text */}
+                  <Text>Edit admin Account</Text>
+                  <TextInput
+                    mode="outlined"
+                    left={<TextInput.Icon name="email" />}
+                    label="email"
+                    value={values.email}
+                    disabled={true}
+                  />
+                  <TextInput
+                    autoFocus={true}
+                    textContentType="name"
+                    mode="outlined"
+                    left={<TextInput.Icon name="account-badge" />}
+                    error={errors.name && touched.name}
+                    label="name"
+                    value={values.name}
+                    ref={name}
+                    onBlur={handleBlur("name")}
+                    onChangeText={handleChange("name")}
+                  />
+                  <div style={{ margin: "5px" }} />
+                  <Button mode="contained" onPress={handleSubmit}>
+                    Save
+                  </Button>
+                </Modal>
+              )}
             </Portal>
           </View>
         );

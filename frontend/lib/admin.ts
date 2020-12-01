@@ -98,11 +98,7 @@ export class Admin {
     name: string,
     token: string
   ): Promise<void> {
-    await Api.put(
-      `/admins/${email}`,
-      { name },
-      token
-    );
+    await Api.put(`/admins/${email}`, { name }, token);
   }
 
   /**
