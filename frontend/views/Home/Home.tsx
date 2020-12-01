@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { View, useWindowDimensions, Platform } from "react-native";
 
 import { connect } from "react-redux";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   TextInput,
   Button,
+  FAB,
 } from "react-native-paper";
 import { useFormik } from "formik";
 
@@ -140,6 +141,18 @@ function Home(props: Props): React.ReactElement {
     }
   };
 
+  //Sets position of the FAB depending on the platform
+  let styleFAB = {
+    right: 16,
+    position: Platform.OS === "web" ? "fixed" : "relative",
+  };
+
+  if (Platform.OS !== "web") {
+    styleFAB["top"] = window.height - safeArea.bottom;
+  } else {
+    styleFAB["bottom"] = 16;
+  }
+
   if (!admins) {
     return (
       <ActivityIndicator animating={true} size="large" style={styles.spinner} />
@@ -169,7 +182,7 @@ function Home(props: Props): React.ReactElement {
           )}
         </Tab.Screen>
       </Tab.Navigator>
-      <InviteFAB onPress={() => onAdd()} />
+      <FAB style={styleFAB as any} icon="plus" onPress={onAdd} />
       <Portal>
         <Modal
           visible={inviteModal}
@@ -178,7 +191,6 @@ function Home(props: Props): React.ReactElement {
           }
           onDismiss={() => setInviteModal(false)}
         >
-          {/* update style for text */}
           <Text>Invite a new admin</Text>
           <TextInput
             autoFocus={true}
@@ -192,7 +204,7 @@ function Home(props: Props): React.ReactElement {
             onBlur={handleBlur("email")}
             onChangeText={handleChange("email")}
           />
-          <div style={{ margin: "5px" }} />
+          <View style={styles.div} />
           <Button mode="contained" onPress={handleSubmit}>
             Send Invite
           </Button>
