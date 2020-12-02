@@ -183,7 +183,7 @@ def test_delete_admin(client):
     assert res.get_json() == {"msg": "successfully deleted admin <tester@gmail.com>"}
 
 
-def test_update_admin(client):
+def test_update_admin_name(client):
     res = client.post(
         "/api/v1/register",
         json={
@@ -198,9 +198,6 @@ def test_update_admin(client):
         "/api/v1/admins/tester@gmail.com",
         json={
             "name": "tester-different-name",
-            "email": "tester@gmail.com",
-            "password": "password",
-            "password_confirmation": "password",
         },
     )
 
@@ -210,6 +207,33 @@ def test_update_admin(client):
     assert res.get_json()["admins"] == [
         {"email": "admin@gmail.com", "name": "admin", "superUser": False},
         {"email": "tester@gmail.com", "name": "tester-different-name", "superUser": False},
+    ]
+
+def test_update_admin_password(client):
+    res = client.post(
+        "/api/v1/register",
+        json={
+            "name": "tester",
+            "email": "tester@gmail.com",
+            "password": "password",
+            "password_confirmation": "password",
+        },
+    )
+
+    res = client.put(
+        "/api/v1/admins/tester@gmail.com",
+        json={
+            "password": "password1",
+            "password_confirmation": "password1"
+        },
+    )
+
+    assert res.get_json() == {"msg": "successfully updated admin <tester@gmail.com>"}
+
+    res = client.get("/api/v1/admins")
+    assert res.get_json()["admins"] == [
+        {"email": "admin@gmail.com", "name": "admin", "superUser": False},
+        {"email": "tester@gmail.com", "name": "tester", "superUser": False},
     ]
 
 
@@ -236,7 +260,6 @@ def test_update_admin_invalid_400(client):
 
     assert res.status_code == 400
 
-
 def test_update_admin_invalid_password_and_confirm_dont_match(client):
     res = client.post(
         "/api/v1/register",
@@ -252,10 +275,10 @@ def test_update_admin_invalid_password_and_confirm_dont_match(client):
         "/api/v1/admins/tester@gmail.com",
         json={
             "name": "tester-different-name",
-            "email": "tester@gmail.com",
             "password": "passwords",
             "password_confirmation": "password",
         },
     )
 
     assert res.status_code == 401
+    

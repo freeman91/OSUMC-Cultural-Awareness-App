@@ -120,7 +120,6 @@ def admin_routes(app: Flask, db: MongoClient) -> None:
 
           {
             "name": "name",
-            "email": "email",
             "password": "password",
             "password_confirmation": "password",
           }
@@ -137,8 +136,7 @@ def admin_routes(app: Flask, db: MongoClient) -> None:
         if isinstance(body, str):
             return {"msg": body}, 400
 
-        admin = db.admins.find_one({"email": body["email"]})
-
+        admin = db.admins.find_one({"email": email})
         if "password" in body:
             if body["password"] != body["password_confirmation"]:
                 return (
@@ -146,17 +144,12 @@ def admin_routes(app: Flask, db: MongoClient) -> None:
                     401,
                 )
             del body["password_confirmation"]
-            body["password"] = generate_password_hash(body["password"])
-        else:
-            body["password"] = admin["password"]
+            admin["password"] = generate_password_hash(body["password"])
 
-        if "superUser" not in body:
-            body["superUser"] = admin["superUser"]
+        if "name" in body:
+            admin["name"] = body["name"]
 
-        if "name" not in body:
-            body["name"] = admin["name"]
-
-        result = db.admins.replace_one({"email": email}, body)
+        result = db.admins.replace_one({"email": email}, admin)
         if result.matched_count == 0 or result.modified_count == 0:
             return {"msg": "Internal server error"}, 500
 
