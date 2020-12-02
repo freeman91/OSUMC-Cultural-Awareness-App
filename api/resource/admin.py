@@ -133,7 +133,6 @@ def admin_routes(app: Flask, db: MongoClient) -> None:
           500 - otherwise
         """
         body = validate_request_body(AdminUpdateSchema, request.json)
-        print(body)
         if isinstance(body, str):
             return {"msg": body}, 400
 
